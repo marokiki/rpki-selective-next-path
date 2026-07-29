@@ -1,0 +1,964 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RPKIにおけるPQC移行方式 — Next上位CAの事前準備とCA単位移行</title>
+<style>
+:root {
+  --fg:#20242b;
+  --muted:#5d6672;
+  --line:#cfd6de;
+  --soft:#f6f8fa;
+  --current:#667085;
+  --current-bg:#f1f3f5;
+  --next:#226b48;
+  --next-bg:#edf7f1;
+  --proposal:#245ea8;
+  --proposal-bg:#eef5fc;
+  --warning:#8a5a00;
+  --warning-bg:#fff7e6;
+}
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  margin:0;
+  color:var(--fg);
+  background:#fff;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Hiragino Sans",
+    "Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  line-height:1.75;
+}
+header {
+  border-bottom:1px solid var(--line);
+  background:var(--soft);
+}
+header .wrap, main, footer {
+  max-width:1060px;
+  margin:0 auto;
+  padding:28px 24px;
+}
+h1 { margin:0 0 10px; font-size:2.05rem; line-height:1.35; }
+h2 {
+  margin:0 0 16px;
+  padding-bottom:8px;
+  border-bottom:1px solid var(--line);
+  font-size:1.5rem;
+}
+h3 { margin:24px 0 8px; font-size:1.13rem; }
+p { margin:10px 0; }
+main { padding-top:12px; }
+section { padding:28px 0; border-bottom:1px solid var(--line); }
+a { color:#1e5696; }
+ul, ol { padding-left:1.35rem; }
+li { margin:5px 0; }
+.small, .muted { color:var(--muted); font-size:.91rem; }
+
+.toc {
+  margin-top:18px;
+  padding:14px 18px;
+  border:1px solid var(--line);
+  background:#fff;
+}
+.toc ol { columns:2; margin:5px 0; }
+
+.term {
+  display:grid;
+  grid-template-columns:220px 1fr;
+  gap:14px;
+  padding:10px 0;
+  border-bottom:1px dotted var(--line);
+}
+.term:last-child { border-bottom:0; }
+
+.note {
+  margin:15px 0;
+  padding:13px 15px;
+  border-left:4px solid var(--proposal);
+  background:var(--proposal-bg);
+}
+.note.next { border-left-color:var(--next); background:var(--next-bg); }
+.note.current { border-left-color:var(--current); background:var(--current-bg); }
+.note.warning { border-left-color:var(--warning); background:var(--warning-bg); }
+
+.diagram {
+  margin:16px 0;
+  padding:16px;
+  border:1px solid var(--line);
+  background:var(--soft);
+  overflow:auto;
+}
+pre {
+  margin:0;
+  white-space:pre;
+  font:14px/1.6 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+code {
+  padding:1px 4px;
+  background:#eef0f2;
+  border-radius:3px;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+
+table {
+  width:100%;
+  margin:16px 0;
+  border-collapse:collapse;
+  font-size:.93rem;
+}
+th, td {
+  padding:10px;
+  border:1px solid var(--line);
+  text-align:left;
+  vertical-align:top;
+}
+th { background:var(--soft); }
+
+.two, .three {
+  display:grid;
+  gap:14px;
+  margin:15px 0;
+}
+.two { grid-template-columns:1fr 1fr; }
+.three { grid-template-columns:repeat(3,1fr); }
+.box {
+  padding:14px;
+  border:1px solid var(--line);
+  background:#fff;
+}
+.box.current { border-top:4px solid var(--current); }
+.box.next { border-top:4px solid var(--next); }
+.box.proposal { border-top:4px solid var(--proposal); }
+.box h3 { margin:0 0 6px; }
+
+.step {
+  position:relative;
+  margin:18px 0;
+  padding:0 0 20px 52px;
+  border-bottom:1px dotted var(--line);
+}
+.step:last-child { border-bottom:0; }
+.step .n {
+  position:absolute;
+  left:0;
+  top:0;
+  width:34px;
+  height:34px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:50%;
+  color:#fff;
+  background:var(--proposal);
+  font-weight:700;
+}
+.step h3 { margin:0 0 7px; }
+
+.ref-list li { margin:8px 0; }
+footer { color:var(--muted); font-size:.88rem; }
+
+@media(max-width:800px) {
+  .two, .three { grid-template-columns:1fr; }
+  .term { grid-template-columns:1fr; gap:2px; }
+  .toc ol { columns:1; }
+}
+@media print {
+  body { font-size:10.5pt; }
+  header .wrap, main, footer { max-width:none; padding-left:16mm; padding-right:16mm; }
+  section { break-inside:avoid; }
+  a { color:inherit; text-decoration:none; }
+}
+</style>
+</head>
+<body>
+<header>
+<div class="wrap">
+  <div class="note warning">
+    <strong>EXPERIMENTAL / NOT FOR PRODUCTION</strong><br>
+    このページは研究設計資料であり、production RPKIの仕様または運用指針ではありません。
+  </div>
+  <h1>RPKIにおけるPQC移行方式の研究設計</h1>
+  <p>
+    Next Trust Anchorから主要なCA運用主体までの認証経路を事前に構築し、
+    Hosted CAを必要時に生成しながらCA単位でNext Suiteへ移行する方式
+  </p>
+  <p class="muted">
+    既存のTA key staging、CA key rollover、Mixed-TreeのCA単位移行を組み合わせ、
+    Current Suite危殆化後の移行可能性と平常時の運用コストを両立させる。
+  </p>
+  <div class="toc">
+    <strong>目次</strong>
+    <ol>
+      <li><a href="#terms">用語</a></li>
+      <li><a href="#problem">問題設定</a></li>
+      <li><a href="#design">方式の構成</a></li>
+      <li><a href="#trust-anchor">Next TAの事前受理</a></li>
+      <li><a href="#scope">事前構築するCAの範囲</a></li>
+      <li><a href="#hosted">Hosted CAの必要時生成</a></li>
+      <li><a href="#delegated">Delegated CAの扱い</a></li>
+      <li><a href="#migration">CA単位の移行手順</a></li>
+      <li><a href="#rp">RPの処理</a></li>
+      <li><a href="#security">安全性</a></li>
+      <li><a href="#cost">コストモデル</a></li>
+      <li><a href="#comparison">既存方式との比較</a></li>
+      <li><a href="#stakeholders">ステークホルダー</a></li>
+      <li><a href="#novelty">新規性</a></li>
+      <li><a href="#evaluation">実装・評価</a></li>
+      <li><a href="#open">未解決事項</a></li>
+    </ol>
+  </div>
+</div>
+</header>
+
+<main>
+<section id="terms">
+<h2>1. 用語</h2>
+
+<div class="term">
+  <strong>Current Suite</strong>
+  <span>現在のRPKIで使用される署名・ハッシュアルゴリズムの組。</span>
+</div>
+<div class="term">
+  <strong>Next Suite</strong>
+  <span>移行先として準備する署名・ハッシュアルゴリズムの組。PQCまたは古典方式とPQCの複合構成を想定する。</span>
+</div>
+<div class="term">
+  <strong>Hosted CA</strong>
+  <span>
+    Resource holder用の論理CAをRIRまたはNIRが代理運用する構成。
+    CA鍵、証明書、CRL、Manifest、signed objects、publicationはHosted service operatorが管理する。
+  </span>
+</div>
+<div class="term">
+  <strong>Delegated CA</strong>
+  <span>
+    Resource holderまたは別の事業者が自らCAを運用する構成。
+    親CAとはProvisioning Protocolで連携し、自ら鍵、CRL、Manifestおよびpublicationを管理する。
+  </span>
+</div>
+<div class="term">
+  <strong>事前構築されたNext path</strong>
+  <span>
+    Current Suiteが安全な期間に構築され、事前受理されたNext Trust Anchorから
+    Next Suiteだけで検証できるCA証明書path。
+  </span>
+</div>
+<div class="term">
+  <strong>CA単位の移行</strong>
+  <span>
+    兄弟CAの進捗とは独立に、新しいCA instanceをstageし、signed productsを再発行してNext Suiteへ切り替えること。
+  </span>
+</div>
+</section>
+
+<section id="problem">
+<h2>2. 問題設定</h2>
+
+<p>
+  Current Suiteが偽造可能になった後、Current署名だけを用いて新しいNext公開鍵を認証すると、
+  攻撃者が自らのNext公開鍵を正規CAの鍵として導入できる。
+  Next署名方式自体が安全でも、公開鍵の正当性を破られたCurrent pathだけで決定する構成は安全ではない。
+</p>
+
+<div class="diagram">
+<pre>Current親CA
+  └─ Current署名でNext子CA鍵を認証
+      └─ Next署名のROA
+
+Current署名を偽造できる場合:
+  攻撃者は任意のNext子CA鍵を含む証明書を作成できる</pre>
+</div>
+
+<p>
+  一方、Next Trust Anchorから全論理CAまでを事前に構築すると、
+  CA証明書、鍵、CRL、Manifestの数が現在のCA数に比例して増加し、
+  移行開始前から継続的な更新負荷が発生する。
+</p>
+
+<p>
+  本方式では、Current Suite破壊後にも新しいNext CA証明書を安全に発行できるCA運用主体までNext pathを事前構築し、
+  その配下の論理CAは必要時に生成する。
+</p>
+</section>
+
+<section id="design">
+<h2>3. 方式の構成</h2>
+
+<div class="three">
+  <div class="box next">
+    <h3>Trust Anchorの準備</h3>
+    <p>
+      RFC 9691のsuccessor key通知、相互確認、acceptance timer、ローカル状態管理を基に、
+      Next Trust AnchorをCurrent Suite危殆化前にRPへ受理させる。
+    </p>
+  </div>
+  <div class="box proposal">
+    <h3>上位CA pathの準備</h3>
+    <p>
+      TA、RIR、NIR、および独立運用される主要なDelegated CAまでをNext Suiteで事前構築する。
+    </p>
+  </div>
+  <div class="box current">
+    <h3>CA単位の移行</h3>
+    <p>
+      Hosted CAやその配下の論理CAは必要時に生成し、RFC 6489のstagingと
+      Mixed-TreeのCA単位移行を用いて順次切り替える。
+    </p>
+  </div>
+</div>
+
+<div class="diagram">
+<pre>Current Suite                         Next Suite（危殆化前）
+
+Current TA                            Next TA
+  └─ Current RIR/NIR                    └─ Next RIR/NIR
+      ├─ Hosted CA A                        └─ Next Delegated ISP CA
+      ├─ Hosted CA B
+      └─ Delegated ISP CA
+          ├─ Customer X
+          └─ Customer Y
+
+事前生成しない例:
+  - Hosted CA A / B
+  - Hosted operatorが必要時に生成できるleaf CA
+  - Next Delegated ISP CAが必要時に生成できる配下CA</pre>
+</div>
+
+<p>
+  Mixed-Treeから利用するのは、CAごとの非同期移行とRFC 6489型のstagingである。
+  Current Suite危殆化後に、新しいNext鍵をCurrent署名で認証するmixed certificateには依存しない。
+</p>
+</section>
+
+<section id="trust-anchor">
+<h2>4. Next Trust Anchorの事前受理</h2>
+
+<p>
+  Next Trust Anchorの公開鍵は、Current Suiteが安全な期間にRPへ伝え、受理済み状態として保存する必要がある。
+  RFC 9691はTAK objectによるsuccessor public keyと証明書URIの通知、predecessorとの相互確認、
+  acceptance timer、およびローカル状態管理を定義している
+  <a href="#ref-rfc9691">[1]</a>。
+</p>
+
+<p>
+  RFC 9691では、timer満了後にsuccessor keyがCurrent keyを置き換え、
+  RPは通常一つのTA keyをproduction validationに使用する。
+  本方式では、Current TAを使用している期間にもNext TAを並行するNext pathの検証に使用する。
+  したがって、TAKの考え方を利用するが、acceptance後のRP処理はRFC 9691のTA key rolloverと異なる。
+</p>
+
+<div class="note warning">
+  既存TAKの意味を変更して利用するか、別のprofileまたはobjectで用途を区別するかは標準化上の検討事項である。
+</div>
+</section>
+
+<section id="scope">
+<h2>5. 事前構築するCAの範囲</h2>
+
+<p>
+  事前構築の単位は、論理CA数ではなく、Current Suite破壊後にもNext Suiteで子CA証明書を発行できる
+  独立したCA運用主体を基準に決める。
+</p>
+
+<table>
+<thead>
+<tr>
+  <th>CAの種類</th>
+  <th>事前準備</th>
+  <th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Trust Anchor</td>
+  <td>必須</td>
+  <td>すべてのNext pathの信頼起点になる。</td>
+</tr>
+<tr>
+  <td>RIR / NIR</td>
+  <td>必須</td>
+  <td>Hosted CAおよびDelegated CAへNext Suiteの証明書を発行する。</td>
+</tr>
+<tr>
+  <td>Hosted resource holder CA</td>
+  <td>原則として必要時生成</td>
+  <td>親CAと子CAを同じHosted backendが管理し、資源情報とROA設定を保持している。</td>
+</tr>
+<tr>
+  <td>Delegated CA</td>
+  <td>原則として事前構築</td>
+  <td>親子が異なるoperatorであり、危殆化後のprovisioningと組織認証への依存を避ける。</td>
+</tr>
+<tr>
+  <td>子CAを持つDelegated CA</td>
+  <td>事前構築を優先</td>
+  <td>未対応の場合、その配下のsubtree全体がNext pathへ接続できない。</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+  RFC 9691は複数のTA key pairを維持する場合、各key pairの下で同等のresource delegationを維持し、
+  変更を両方へ反映することを要求している
+  <a href="#ref-rfc9691">[1]</a>。
+  本方式では同じ原則を、事前構築する上位CA間のCurrent/Next resource stateへ適用する。
+</p>
+</section>
+
+<section id="hosted">
+<h2>6. Hosted CAの必要時生成</h2>
+
+<p>
+  Hosted RPKIでは、RIR/NIRが各resource holderの論理CAを代理運用し、
+  秘密鍵生成、証明書発行、signed object生成、publicationを行う。
+  APNICとRIPE NCCのHosted serviceもこの運用モデルを採用している
+  <a href="#ref-apnic">[6]</a><a href="#ref-ripe-hosted">[8]</a>。
+</p>
+
+<p>
+  Next Trust AnchorからHosted service operatorのNext CAまでのpathが事前構築されていれば、
+  個別のHosted CAはCurrent Suite危殆化後に生成できる。
+</p>
+
+<div class="diagram">
+<pre>危殆化前
+
+Next TA
+  └─ Next RIR/NIR CA
+
+
+危殆化後または計画移行時
+
+Next TA
+  └─ Next RIR/NIR CA
+      └─ Next Hosted CA A
+          ├─ CRL
+          ├─ Manifest
+          ├─ ROA
+          └─ ASPA</pre>
+</div>
+
+<div class="step">
+  <div class="n">1</div>
+  <h3>Hosted backendがNext CA鍵を生成する</h3>
+  <p>
+    利用者がEE鍵やCA鍵を操作する必要はない。Next Suiteに対応したHosted backendが鍵を生成・保管する。
+  </p>
+</div>
+
+<div class="step">
+  <div class="n">2</div>
+  <h3>Next RIR/NIR CAが資源証明書を発行する</h3>
+  <p>
+    RIR/NIRの権威的な資源登録情報を基に、Next Hosted CAへIP address resourcesとAS resourcesを委任する。
+    証明書はNext Suiteで署名されるため、Current署名を使用しない。
+  </p>
+</div>
+
+<div class="step">
+  <div class="n">3</div>
+  <h3>CRL、Manifest、signed objectsを生成する</h3>
+  <p>
+    Hosted backendに保存されているROA・ASPA設定を用いてNext側のproductsを生成し、Next repositoryへ公開する。
+  </p>
+</div>
+
+<div class="step">
+  <div class="n">4</div>
+  <h3>RPがNext TAから検証する</h3>
+  <p>
+    RPはNext TAからNext RIR/NIR CA、Next Hosted CA、EE certificate、signed objectまでを
+    Next Suiteだけで検証する。
+  </p>
+</div>
+
+<p>
+  この手順が安全に成立する条件は、Next RIR/NIR pathが事前構築済みであること、
+  Hosted backendの資源データと利用者認証が正しいこと、
+  Next Suiteの鍵管理・発行機能が利用可能であること、
+  およびRPがCurrent側へfallbackしないことである。
+</p>
+
+<div class="note next">
+  Hosted CA自身のNext鍵と証明書を事前に維持しなくても、
+  Next親CAとHosted operatorの管理系が安全であれば、Current Suite危殆化後にNext pathを生成できる。
+</div>
+</section>
+
+<section id="delegated">
+<h2>7. Delegated CAの扱い</h2>
+
+<p>
+  Delegated RPKIでは、親CAと子CAが異なるoperatorによって管理される。
+  RFC 8183はProvisioning ProtocolおよびPublication Protocolの関係を設定するための
+  out-of-band public key exchangeを定義している
+  <a href="#ref-rfc8183">[4]</a>。
+</p>
+
+<p>
+  Current Suite危殆化後に初めてNext公開鍵を登録する場合、
+  親CAはCurrent RPKI署名以外の方法でoperatorとNext公開鍵の正当性を確認しなければならない。
+  この依存を避けるため、初期設計ではDelegated CAをNext Suiteで事前構築する。
+</p>
+
+<div class="diagram">
+<pre>危殆化前に維持
+
+Next TA
+  └─ Next RIR/NIR CA
+      └─ Next Delegated CA
+          ├─ CRL
+          └─ Manifest
+
+移行時または危殆化後
+
+Next Delegated CA
+  ├─ ROA / ASPA
+  └─ 必要に応じてNext child CA certificates</pre>
+</div>
+
+<p>
+  Repository負荷をさらに減らす案として、Next公開鍵またはSPKI hashだけを危殆化前に登録し、
+  証明書とRepository objectsを必要時に生成する方式も考えられる。
+  ただし、登録情報の更新、proof of possession、resource変更、通常のkey rollover、
+  危殆化後の変更禁止を追加で定義する必要があるため、主要方式とは分けて評価する。
+</p>
+</section>
+
+<section id="migration">
+<h2>8. CA単位の移行手順</h2>
+
+<p>
+  各CAの切替には、RFC 6489のCURRENT、NEW、OLD CA instanceとStaging Periodの考え方を利用する。
+  RFC 6489ではNEW CAが最初に空のCRLとCRLだけを掲載したManifestを公開し、
+  staging後にCURRENT CAのproductsを再発行して置換する
+  <a href="#ref-rfc6489">[2]</a>。
+</p>
+
+<div class="step">
+  <div class="n">1</div>
+  <h3>Next CA instanceを準備する</h3>
+  <p>
+    事前構築済みCAは既存instanceを使用する。Hosted CAはNext親CAの下で必要時に生成する。
+  </p>
+</div>
+
+<div class="step">
+  <div class="n">2</div>
+  <h3>CRLとManifestをstageする</h3>
+  <p>
+    Next CAが有効であり、RPから取得・検証できる状態を確認する。
+  </p>
+</div>
+
+<div class="step">
+  <div class="n">3</div>
+  <h3>signed productsを再発行する</h3>
+  <p>
+    Current側と同じ意味を持つROA、ASPA、子CA証明書等をNext Suiteで生成する。
+    比較は正規化したVRP set、ASPA payload set、resource set等に対して行う。
+  </p>
+</div>
+
+<div class="step">
+  <div class="n">4</div>
+  <h3>対象CAをNext側へ切り替える</h3>
+  <p>
+    兄弟CAの移行を待たずに、対象CA配下の検証結果をNext側へ切り替える。
+    切替後のNext対応RPはCurrent側へfallbackしない。
+  </p>
+</div>
+
+<div class="step">
+  <div class="n">5</div>
+  <h3>Current CA instanceを廃止する</h3>
+  <p>
+    Legacy RP向けの猶予期間または共通EOLの終了後、Current証明書とproductsを失効・撤去する。
+  </p>
+</div>
+
+<p>
+  あるCAがNextへ移行しても、兄弟CAはCurrentのまま運用できる。
+  この意味で一つのRPKI全体にCurrentとNextのCAが混在する。
+  ただし、危殆化後に生成するNext CA証明書は事前構築済みのNext親CAから発行し、
+  Current親CAの署名には依存しない。
+</p>
+</section>
+
+<section id="rp">
+<h2>9. RPの処理</h2>
+
+<table>
+<thead>
+<tr>
+  <th>状態</th>
+  <th>Next path</th>
+  <th>Next products</th>
+  <th>RPの処理</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Currentのみ</td>
+  <td>未受理または未構築</td>
+  <td>なし</td>
+  <td>Current側を使用する。</td>
+</tr>
+<tr>
+  <td>上位path準備済み</td>
+  <td>TAからCA operatorまで有効</td>
+  <td>対象Hosted CAは未生成でもよい</td>
+  <td>Current側を使用し、Next上位pathを継続検証する。</td>
+</tr>
+<tr>
+  <td>Staging</td>
+  <td>対象CAまで有効</td>
+  <td>並行発行</td>
+  <td>Current側を出力し、Current/Nextの意味的同等性を確認する。</td>
+</tr>
+<tr>
+  <td>切替後</td>
+  <td>対象CAまで有効</td>
+  <td>正式</td>
+  <td>対象CA配下ではNext側を使用し、Currentへfallbackしない。</td>
+</tr>
+<tr>
+  <td>Current廃止後</td>
+  <td>有効</td>
+  <td>正式</td>
+  <td>Next側のみを使用する。</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+  Current側とNext側の比較は、CCRを必須要素とせず、
+  CA証明書から得たresource set、Validated ROA Payload、Validated ASPA Payload等を直接正規化して比較する。
+</p>
+
+<p>
+  CA単位の切替をRPへ通知する方法は別途定義する必要がある。
+  必要な情報は、対象CAまたはresource class、対応するCurrent/Next CA、
+  切替状態、更新順序、およびrollbackを防ぐための永続状態である。
+</p>
+</section>
+
+<section id="security">
+<h2>10. 安全性</h2>
+
+<table>
+<thead>
+<tr>
+  <th>条件または攻撃</th>
+  <th>処理</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Current署名の偽造</td>
+  <td>危殆化後にCurrent署名で導入された新しいNext CA鍵を信頼しない。</td>
+</tr>
+<tr>
+  <td>Hosted CAの新規生成</td>
+  <td>事前構築済みNext RIR/NIR CAが、権威的な資源登録情報を基にNext Suiteで証明書を発行する。</td>
+</tr>
+<tr>
+  <td>Delegated CAの移行</td>
+  <td>事前構築済みNext CAを使用する。未準備の場合は安全なout-of-band provisioningが追加で必要になる。</td>
+</tr>
+<tr>
+  <td>Next repositoryの妨害</td>
+  <td>切替後はCurrentへfallbackせず、可用性障害として扱う。</td>
+</tr>
+<tr>
+  <td>古いCurrent状態のReplay</td>
+  <td>RPが切替済み状態と更新順序を永続化し、Currentへ戻らない。</td>
+</tr>
+<tr>
+  <td>Hosted管理系の侵害</td>
+  <td>本方式では防止しない。利用者認証、資源登録DB、HSM、CA backendを別途保護する必要がある。</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+  Hosted CAが危殆化後に安全に移行できるのは、Current RPKI署名ではなく、
+  事前構築済みのNext親CAとRIR/NIRの権威的な資源登録情報を信頼するためである。
+</p>
+</section>
+
+<section id="cost">
+<h2>11. コストモデル</h2>
+
+<p>
+  全論理CA数を <code>N</code>、事前構築する独立CA運用主体数を <code>B</code>、
+  同時に移行中のCA数を <code>M</code> とする。
+</p>
+
+<table>
+<thead>
+<tr>
+  <th>方式</th>
+  <th>平常時に維持するNext CA</th>
+  <th>移行時の追加objects</th>
+  <th>危殆化後の移行</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>全CAを事前構築</td>
+  <td><code>N</code>個</td>
+  <td><code>M</code>個分のROA・ASPA等</td>
+  <td>全CAが直ちに移行可能</td>
+</tr>
+<tr>
+  <td>Mixed-Treeのみ</td>
+  <td>ほぼなし</td>
+  <td><code>M</code>個分のCAとproducts</td>
+  <td>Current署名に依存する未準備CAは安全な鍵導入が困難</td>
+</tr>
+<tr>
+  <td>本方式</td>
+  <td><code>B</code>個</td>
+  <td><code>M</code>個分のCAとproducts</td>
+  <td>Hosted CAはNext親CAから必要時生成。Delegated CAは事前準備範囲まで移行可能</td>
+</tr>
+</tbody>
+</table>
+
+<div class="diagram">
+<pre>全CA事前構築:
+  N × (Next CA key + CA certificate + CRL + Manifest)
+
+本方式:
+  B × (Next CA key + CA certificate + CRL + Manifest)
+  +
+  M × (移行対象CAのNext products)
+
+通常は B &lt;&lt; N となることを期待するが、
+世界全体の比率は実測が必要である。</pre>
+</div>
+
+<p>
+  Hosted CAを事前生成しないことで、待機期間中のCA鍵、CRL、Manifest、Manifest用EE鍵、
+  Repository容量、RRDP更新を削減できる。一方、危殆化時に大量のHosted CAを一斉生成すると、
+  鍵生成、証明書発行、publication、RP初回検証が集中するため、batch生成と定期訓練が必要になる。
+</p>
+</section>
+
+<section id="comparison">
+<h2>12. 既存方式との比較</h2>
+
+<table>
+<thead>
+<tr>
+  <th>項目</th>
+  <th>RFC 6916</th>
+  <th>Mixed-Tree</th>
+  <th>本方式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Next TA</td>
+  <td>並行SuiteのTALを使用</td>
+  <td>移行設計に応じて準備</td>
+  <td>RFC 9691の考え方を基に危殆化前に受理</td>
+</tr>
+<tr>
+  <td>事前構築範囲</td>
+  <td>top-downに広範な並行階層を構築</td>
+  <td>移行対象CAを必要時に準備</td>
+  <td>TA、RIR/NIR、主要Delegated CAまでを準備</td>
+</tr>
+<tr>
+  <td>Hosted CA</td>
+  <td>並行階層の一部として事前発行</td>
+  <td>CA単位で移行</td>
+  <td>Next親CAから必要時に生成</td>
+</tr>
+<tr>
+  <td>ROA・ASPA等</td>
+  <td>移行phaseに従い両Suiteで発行</td>
+  <td>対象CAの切替時に再発行・置換</td>
+  <td>対象CAだけ再発行し、兄弟CAと独立に切替</td>
+</tr>
+<tr>
+  <td>危殆化後の新しいNext鍵</td>
+  <td>完成済みNext hierarchyを使用</td>
+  <td>Current署名だけに依存すると安全ではない</td>
+  <td>事前構築済みNext親CAからNext Suiteで証明書を発行</td>
+</tr>
+<tr>
+  <td>平常時のRepository負荷</td>
+  <td>大</td>
+  <td>小</td>
+  <td>中。独立CA運用主体数に比例</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+  RFC 6916は計画的かつtop-downな移行を定義し、emergency transitionは対象外としている
+  <a href="#ref-rfc6916">[3]</a>。
+  本方式は、危殆化前のNext trust stateを利用して、Current Suite破壊後にもHosted CAを生成できる条件を追加する。
+</p>
+</section>
+
+<section id="stakeholders">
+<h2>13. 実装・展開ステークホルダー</h2>
+
+<p>
+  論理CA数と、独立してCA softwareを実装・運用する組織数は一致しない。
+  Hosted RPKIでは一つのRIR/NIR backendが多数の論理CAを運用する。
+  APNICはHosted Modeを多くのMemberに推奨し
+  <a href="#ref-apnic">[6]</a>、
+  RIPE NCCもHosted serviceを多くの利用者に適した方式と説明している
+  <a href="#ref-ripe-delegated">[7]</a>。
+  ARINは2026年第1四半期にRPKI参加組織の98%がHosted RPKIを利用していたと報告している
+  <a href="#ref-arin">[9]</a>。
+</p>
+
+<div class="two">
+  <div class="box next">
+    <h3>集中して対応する主体</h3>
+    <ul>
+      <li>RIR/NIRのTA・Hosted CA backend operator</li>
+      <li>RPKI CA software実装者</li>
+      <li>RP software実装者</li>
+      <li>主要なDelegated CA operator</li>
+    </ul>
+  </div>
+  <div class="box current">
+    <h3>一般のHosted利用者</h3>
+    <ul>
+      <li>CA鍵やEE鍵を直接管理しない</li>
+      <li>Next Suite実装を自組織へ導入しない</li>
+      <li>ROA・ASPA設定と切替方針を確認する</li>
+    </ul>
+  </div>
+</div>
+
+<p>
+  Hosted RPKIの普及は、独立したsoftware deployment、operator coordination、
+  個別HSM、publication運用の数を削減する。
+  RP検証量と、実際に移行したHosted CAの証明書・CRL・Manifest数は削減しない。
+</p>
+</section>
+
+<section id="novelty">
+<h2>14. 新規性</h2>
+
+<ol>
+  <li>
+    Next pathの事前構築範囲を全論理CAではなく、
+    Current Suite破壊後に安全な子CA発行を継続できるCA運用主体までに限定する。
+  </li>
+  <li>
+    Hosted CAについて、事前構築済みNext親CAと権威的な資源登録情報を用い、
+    Current Suite危殆化後にNext CAを必要時生成する。
+  </li>
+  <li>
+    Delegated CAには事前構築を要求し、Hosted CAには必要時生成を許すことで、
+    trust boundaryに応じて準備コストを変える。
+  </li>
+  <li>
+    RFC 6489のstagingとMixed-TreeのCA単位移行を、
+    Current署名に依存しないNext-rooted pathの下で使用する。
+  </li>
+  <li>
+    事前構築CA数、Repository負荷、危殆化後に移行可能なresource割合の関係を定量化する。
+  </li>
+</ol>
+</section>
+
+<section id="evaluation">
+<h2>15. 実装・評価</h2>
+
+<h3>実装段階</h3>
+<ol>
+  <li>Current TAとNext TAを用意し、RFC 9691を基にしたNext TA事前受理をprototype化する。</li>
+  <li>Next TAからRIR/NIRおよびDelegated CAまでのNext pathを構築する。</li>
+  <li>Hosted CAを事前生成しない状態で、Current側のROA設定と資源情報を保持する。</li>
+  <li>Current Suiteを無効とした後、Next RIR/NIR CAからHosted CAを新規生成する。</li>
+  <li>Next CRL、Manifest、ROA、ASPAを公開し、Next TAから検証する。</li>
+  <li>RFC 6489型staging、意味的比較、CA単位切替、Current fallback禁止を実装する。</li>
+  <li>Next SuiteをP-256からML-DSAまたは複合署名へ置き換える。</li>
+</ol>
+
+<h3>比較する構成</h3>
+<ul>
+  <li>RFC 6916型の全面並行階層</li>
+  <li>全論理CAまでNext pathを事前構築</li>
+  <li>本方式: RIR/NIR・Delegated CAまで事前構築し、Hosted CAは必要時生成</li>
+  <li>Next公開鍵だけを事前登録するDelegated CA最適化</li>
+  <li>Mixed-Treeのみ</li>
+</ul>
+
+<h3>測定項目</h3>
+<table>
+<thead><tr><th>分類</th><th>測定内容</th></tr></thead>
+<tbody>
+<tr><td>Repository</td><td>CA証明書、CRL、Manifest、ROA、ASPAの数と容量、RRDP Snapshot/Delta</td></tr>
+<tr><td>CA</td><td>平常時の定期更新、Hosted CA一括生成時間、証明書発行、publication時間</td></tr>
+<tr><td>RP</td><td>複数TA validation、署名検証数、増分検証、切替状態の保存</td></tr>
+<tr><td>安全性</td><td>Current署名偽造、偽Next鍵、Repository Replay、Next妨害、fallback</td></tr>
+<tr><td>運用</td><td>独立CA operator数、Hosted/Delegated比率、HSM鍵数、障害時batch規模</td></tr>
+<tr><td>移行能力</td><td>危殆化後に安全に移行可能なCA数、resource量、subtree数</td></tr>
+</tbody>
+</table>
+</section>
+
+<section id="open">
+<h2>16. 未解決事項</h2>
+
+<ul>
+  <li>RFC 9691のTAKを既存形式のまま利用するか、別用途を示すprofileまたはobjectを定義するか。</li>
+  <li>CA単位の切替状態とrollback防止情報をRPへ伝える標準方式。</li>
+  <li>CurrentとNextのCA証明書およびvalidated payloadの意味的同等性を比較する共通手順。</li>
+  <li>Delegated CAのNext公開鍵だけを事前登録する場合のproof of possessionと更新規則。</li>
+  <li>通常のCA key rollover、resource変更、Suite migrationが同時発生する場合の処理順序。</li>
+  <li>危殆化時に多数のHosted CAを生成・公開するためのbatch制御とRepository負荷。</li>
+  <li>Hosted管理系、会員認証、資源登録DBがCurrent Suiteとは独立して安全であることの運用要件。</li>
+</ul>
+</section>
+
+<section>
+<h2>17. 参考資料</h2>
+<ol class="ref-list">
+  <li id="ref-rfc9691">
+    <a href="https://www.rfc-editor.org/rfc/rfc9691.html">RFC 9691 — A Profile for Resource Public Key Infrastructure Trust Anchor Keys</a>
+  </li>
+  <li id="ref-rfc6489">
+    <a href="https://www.rfc-editor.org/rfc/rfc6489.html">RFC 6489 — Certification Authority Key Rollover in the RPKI</a>
+  </li>
+  <li id="ref-rfc6916">
+    <a href="https://www.rfc-editor.org/rfc/rfc6916.html">RFC 6916 — Algorithm Agility Procedure for the RPKI</a>
+  </li>
+  <li id="ref-rfc8183">
+    <a href="https://www.rfc-editor.org/rfc/rfc8183.html">RFC 8183 — Out-of-Band Setup Protocol for RPKI Production Services</a>
+  </li>
+  <li id="ref-mixed-tree">
+    <a href="https://www.sidnlabs.nl/downloads/6mCHukPGqoY0ojSMqfIadD/3dd4a89b54d6eb38bf634076505eec8c/PQC_for_the_RPKI.pdf">D. Doesburg — Post-Quantum Cryptography for the RPKI</a>
+  </li>
+  <li id="ref-apnic">
+    <a href="https://www.apnic.net/community/security/resource-certification/">APNIC — RPKI deployment models</a>
+  </li>
+  <li id="ref-ripe-delegated">
+    <a href="https://www.ripe.net/manage-ips-and-asns/resource-management/rpki/using-a-delegated-certification-authority/">RIPE NCC — Using a Delegated Certification Authority</a>
+  </li>
+  <li id="ref-ripe-hosted">
+    <a href="https://www.ripe.net/manage-ips-and-asns/resource-management/rpki/using-the-rpki-system/">RIPE NCC — Hosted and Delegated RPKI</a>
+  </li>
+  <li id="ref-arin">
+    <a href="https://www.arin.net/blog/2026/04/21/arin-57-day-2-recap/">ARIN 57 Day 2 Recap — RPKI adoption and Hosted RPKI usage</a>
+  </li>
+</ol>
+</section>
+</main>
+
+<footer>
+Research design note — 2026-07-29
+</footer>
+</body>
+</html>
