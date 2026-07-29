@@ -1,0 +1,85 @@
+{
+  "package": "codex_selective_next_path",
+  "files": [
+    {
+      "path": "AGENTS.md",
+      "bytes": 2972
+    },
+    {
+      "path": "GOAL_PROMPT.txt",
+      "bytes": 2122
+    },
+    {
+      "path": "README.md",
+      "bytes": 2239
+    },
+    {
+      "path": "TASKS.md",
+      "bytes": 2470
+    },
+    {
+      "path": "docs/01-design.md",
+      "bytes": 2357
+    },
+    {
+      "path": "docs/02-threat-model.md",
+      "bytes": 1600
+    },
+    {
+      "path": "docs/03-state-machine.md",
+      "bytes": 1864
+    },
+    {
+      "path": "docs/04-test-matrix.md",
+      "bytes": 1556
+    },
+    {
+      "path": "docs/05-output-schema.md",
+      "bytes": 1324
+    },
+    {
+      "path": "docs/06-repository-mapping.md",
+      "bytes": 1585
+    },
+    {
+      "path": "docs/07-non-goals.md",
+      "bytes": 571
+    },
+    {
+      "path": "prompts/00-master.md",
+      "bytes": 2037
+    },
+    {
+      "path": "prompts/01-model.md",
+      "bytes": 1297
+    },
+    {
+      "path": "prompts/02-cost-model.md",
+      "bytes": 1117
+    },
+    {
+      "path": "prompts/03-real-fixtures.md",
+      "bytes": 1117
+    },
+    {
+      "path": "prompts/04-pqc-fixtures.md",
+      "bytes": 838
+    },
+    {
+      "path": "prompts/05-krill-hosted.md",
+      "bytes": 933
+    },
+    {
+      "path": "prompts/06-rp-state.md",
+      "bytes": 1047
+    },
+    {
+      "path": "reference/research-design.html",
+      "bytes": 31249
+    },
+    {
+      "path": "reference/research-design.pdf",
+      "bytes": 838767
+    }
+  ]
+}

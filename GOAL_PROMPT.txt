@@ -1,0 +1,33 @@
+Implement the first phase of the selective Next-path RPKI migration experiment in marokiki/pqc-rpki-lab.
+
+Read the repository README and Makefile, then read codex/selective-next-path/AGENTS.md and docs/01-design.md through docs/07-non-goals.md.
+
+Build a deterministic Python state-machine model only. Do not generate real certificates, change Krill/Routinator/rpki-client, implement cryptography, use network access, or depend on CCR.
+
+Model:
+- Current Suite states: secure, compromised, retired.
+- Next TA states: absent, observed, accepted. Acceptance is allowed only before compromise.
+- CA roles: TA, RIR/NIR, Hosted, Delegated.
+- Prebuilt Next parents versus on-demand Hosted children.
+- CA states: current-only, next-parent-available, next-staged, dual-published, activated, current-retired.
+- Staging, semantic comparison, activation, retirement, and anti-rollback.
+
+Required scenarios:
+1. Accept Next TA while Current is secure.
+2. Prebuild Next TA -> Next RIR/NIR.
+3. Leave Hosted CA A absent.
+4. Mark Current compromised.
+5. Create Hosted CA A under the valid Next parent using the authoritative Hosted operator.
+6. Stage equivalent resources and VRPs, then activate.
+7. After activation, Next failure must not fall back to Current.
+8. Reject accepting a new Next TA after compromise.
+9. Reject a Current-signed introduction of a new Next CA key after compromise.
+10. Reject an unprepared Delegated CA after compromise.
+11. Allow a prebuilt Delegated CA.
+12. Keep a sibling CA on Current.
+
+Use stable machine-readable reason codes. Add deterministic outputs under results/selective-next-path/: topology.json, scenario-results.json, cost-model.json, and report.md. Add tests under tests/, synthetic inputs under testdata/selective-next-path/, and Makefile targets selective-next-path and selective-next-path-test.
+
+Reuse existing result I/O and mixed-tree conventions where suitable, but do not alter the meaning of existing published fixtures. All outputs must state EXPERIMENTAL / NOT FOR PRODUCTION.
+
+Run the focused targets and make test. Report files changed, commands, results, limitations, and deviations.

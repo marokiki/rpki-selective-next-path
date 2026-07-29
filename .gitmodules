@@ -1,0 +1,3 @@
+[submodule "reference/pqc-rpki-lab"]
+	path = reference/pqc-rpki-lab
+	url = https://github.com/marokiki/pqc-rpki-lab.git
