@@ -1,0 +1,226 @@
+{
+  "accepted_next_ta_id": "next-ta-2035",
+  "cas": [
+    {
+      "authoritative_parent_ca_id": "rir-1",
+      "authoritative_registry_id": null,
+      "ca_id": "delegated-prebuilt",
+      "current_resources": {
+        "as_ranges": [
+          [
+            64500,
+            64502
+          ]
+        ],
+        "ip_prefixes": [
+          "2001:db8:1::/48"
+        ]
+      },
+      "current_state": "published",
+      "management_mode": "delegated",
+      "next_preparation": "prebuilt",
+      "next_resources": {
+        "as_ranges": [
+          [
+            64500,
+            64502
+          ]
+        ],
+        "ip_prefixes": [
+          "2001:db8:1::/48"
+        ]
+      },
+      "next_state": "activated",
+      "operator_id": "delegated-a-operator",
+      "parent_ca_id": "rir-1",
+      "resource_weight": 80,
+      "role": "delegated"
+    },
+    {
+      "authoritative_parent_ca_id": "rir-1",
+      "authoritative_registry_id": null,
+      "ca_id": "delegated-unprepared",
+      "current_resources": {
+        "as_ranges": [
+          [
+            64510,
+            64510
+          ]
+        ],
+        "ip_prefixes": [
+          "2001:db8:2::/48"
+        ]
+      },
+      "current_state": "published",
+      "management_mode": "delegated",
+      "next_preparation": "none",
+      "next_resources": null,
+      "next_state": "current_only",
+      "operator_id": "delegated-b-operator",
+      "parent_ca_id": "rir-1",
+      "resource_weight": 20,
+      "role": "delegated"
+    },
+    {
+      "authoritative_parent_ca_id": "rir-1",
+      "authoritative_registry_id": "registry-hosted-a",
+      "ca_id": "hosted-a",
+      "current_resources": {
+        "as_ranges": [
+          [
+            64496,
+            64496
+          ]
+        ],
+        "ip_prefixes": [
+          "192.0.2.0/25"
+        ]
+      },
+      "current_state": "published",
+      "management_mode": "hosted",
+      "next_preparation": "on_demand",
+      "next_resources": {
+        "as_ranges": [
+          [
+            64496,
+            64496
+          ]
+        ],
+        "ip_prefixes": [
+          "192.0.2.0/25"
+        ]
+      },
+      "next_state": "activated",
+      "operator_id": "rir-operator",
+      "parent_ca_id": "rir-1",
+      "resource_weight": 180,
+      "role": "hosted"
+    },
+    {
+      "authoritative_parent_ca_id": "rir-1",
+      "authoritative_registry_id": "registry-hosted-sibling",
+      "ca_id": "hosted-sibling",
+      "current_resources": {
+        "as_ranges": [
+          [
+            64497,
+            64497
+          ]
+        ],
+        "ip_prefixes": [
+          "192.0.2.128/25"
+        ]
+      },
+      "current_state": "published",
+      "management_mode": "hosted",
+      "next_preparation": "on_demand",
+      "next_resources": null,
+      "next_state": "current_only",
+      "operator_id": "rir-operator",
+      "parent_ca_id": "rir-1",
+      "resource_weight": 120,
+      "role": "hosted"
+    },
+    {
+      "authoritative_parent_ca_id": null,
+      "authoritative_registry_id": null,
+      "ca_id": "next-ta-2035",
+      "current_resources": {
+        "as_ranges": [
+          [
+            0,
+            4294967295
+          ]
+        ],
+        "ip_prefixes": [
+          "0.0.0.0/0",
+          "::/0"
+        ]
+      },
+      "current_state": "published",
+      "management_mode": "delegated",
+      "next_preparation": "prebuilt",
+      "next_resources": {
+        "as_ranges": [
+          [
+            0,
+            4294967295
+          ]
+        ],
+        "ip_prefixes": [
+          "0.0.0.0/0",
+          "::/0"
+        ]
+      },
+      "next_state": "next_ca_staged",
+      "operator_id": "ta-operator",
+      "parent_ca_id": null,
+      "resource_weight": 1000,
+      "role": "trust_anchor"
+    },
+    {
+      "authoritative_parent_ca_id": "next-ta-2035",
+      "authoritative_registry_id": null,
+      "ca_id": "rir-1",
+      "current_resources": {
+        "as_ranges": [
+          [
+            64496,
+            64511
+          ]
+        ],
+        "ip_prefixes": [
+          "192.0.2.0/24",
+          "2001:db8::/32"
+        ]
+      },
+      "current_state": "published",
+      "management_mode": "delegated",
+      "next_preparation": "prebuilt",
+      "next_resources": {
+        "as_ranges": [
+          [
+            64496,
+            64511
+          ]
+        ],
+        "ip_prefixes": [
+          "192.0.2.0/24",
+          "2001:db8::/32"
+        ]
+      },
+      "next_state": "next_ca_staged",
+      "operator_id": "rir-operator",
+      "parent_ca_id": "next-ta-2035",
+      "resource_weight": 600,
+      "role": "rir_nir"
+    }
+  ],
+  "current_suite_state": "compromised",
+  "next_trust_anchor_state": "accepted",
+  "relationships": [
+    {
+      "child_ca_id": "rir-1",
+      "parent_ca_id": "next-ta-2035"
+    },
+    {
+      "child_ca_id": "delegated-prebuilt",
+      "parent_ca_id": "rir-1"
+    },
+    {
+      "child_ca_id": "delegated-unprepared",
+      "parent_ca_id": "rir-1"
+    },
+    {
+      "child_ca_id": "hosted-a",
+      "parent_ca_id": "rir-1"
+    },
+    {
+      "child_ca_id": "hosted-sibling",
+      "parent_ca_id": "rir-1"
+    }
+  ],
+  "schema_version": 1,
+  "simulation_epoch": "2035-01-01T00:00:00Z",
+  "warning": "EXPERIMENTAL / NOT FOR PRODUCTION"
+}

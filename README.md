@@ -1,35 +1,27 @@
-# Codex作業用ディレクトリ: Selective Next Path + Mixed-Tree
+# Selective Next Path + Mixed-Tree
 
-このディレクトリは、`marokiki/pqc-rpki-lab` に次の研究実装を追加するための作業仕様です。
+> EXPERIMENTAL / NOT FOR PRODUCTION
 
-- Next Trust AnchorをCurrent Suite危殆化前に受理する
-- Next TAからRIR/NIR・主要Delegated CAまでを事前構築する
-- Hosted CAは事前生成せず、Next親CAから必要時に生成する
-- RFC 6489型stagingとMixed-TreeのCA単位移行を用いる
-- Current Suite危殆化後はCurrent署名で新しいNext鍵を導入しない
-- activation後はCurrentへfallbackしない
-- CCRを必須要素にしない
+Selective Next-path RPKI移行を検討するための、決定論的でprotocol-neutralなPython状態機械です。
+Current Suiteの危殆化前にNext Trust Anchorと上位経路を準備し、危殆化後に権威的なHosted operatorがHosted CAを生成して移行できるかを合成fixtureで検証します。
 
-## 使用方法
+実証明書、暗号アルゴリズム、RRDP、rsync、Krill、Routinator、rpki-client、production validatorは実装しません。
 
-1. このディレクトリをリポジトリ内の `codex/selective-next-path/` に置く。
-2. Codexをリポジトリルートで起動する。
-3. 最初に `prompts/00-master.md` を渡し、実装計画を確認する。
-4. その後、`prompts/01-model.md` から順番に実行する。
-5. 各phaseでテストとmachine-readable resultsを確認してから次へ進む。
+## Requirements
 
-一度に全phaseを実装させず、各promptを独立したIssue相当の作業単位として扱う。
+- Python 3.11以降
+- GNU Makeまたは互換make
+- 通常の生成とテストにはネットワークアクセスもsubmoduleも不要
 
-## 推奨する最初の作業
-
-最初は実暗号やKrill改修へ進まず、Phase 1の純Pythonモデルだけを実装する。
+## Run
 
 ```sh
 make selective-next-path
 make selective-next-path-test
+make test
 ```
 
-期待する主な出力:
+`make selective-next-path` は次の決定論的な成果物を生成します。
 
 ```text
 results/selective-next-path/
@@ -39,16 +31,62 @@ results/selective-next-path/
 └── report.md
 ```
 
-## ファイル構成
+JSONが一次成果物であり、`report.md`は同じデータから生成する表示用ビューです。
+すべての公開出力に `EXPERIMENTAL / NOT FOR PRODUCTION` を含めます。
 
-- `AGENTS.md`: Codexへ継続的に与えるリポジトリ規則
-- `TASKS.md`: 全体バックログ
-- `docs/`: 設計、脅威モデル、状態機械、テスト、出力仕様
-- `prompts/`: phaseごとのCodex prompt
-- `reference/`: 人間向け研究設計資料
+## Model
 
-## 実装上の境界
+Phase 1は次をモデル化します。
 
-この研究コードは実験用であり、production RPKI validator、RRDP、rsync、暗号アルゴリズム自体を新規実装しない。既存のOpenSSL provider、Krill、Routinator、rpki-client等を利用する。
+- Current Suiteの `secure`、`compromised`、`retired`
+- Next TAの `absent`、`observed`、`accepted`
+- TA、RIR/NIR、Hosted、DelegatedのCA role
+- prebuilt Next pathとon-demand Hosted CA
+- staging、dual publication、semantic comparison、activation、retirement
+- scopeごとのmonotonic transition sequenceとanti-rollback
+- activation後のNext障害に対するno-fallback
 
-公開可能なコード・fixture・集計結果だけをcommitする。秘密鍵、外部checkout、build tree、raw logs、AI作業メモは既存方針に従い `local/` 以下へ置く。
+Semantic comparisonは設定されたscopeに従い、正規化したresource set、VRP、ASPA、child delegationを比較します。
+DER、URI、SIA、AIA、validityの完全一致は要求しません。
+
+## Repository layout
+
+```text
+src/selective_next_path/        状態機械、意味比較、cost model、result I/O
+tools/                          fixture生成と参照境界検査
+tests/                          T01–T20を含むunit tests
+testdata/selective-next-path/   公開可能な合成入力
+results/selective-next-path/    決定論的な生成結果
+docs/                           研究設計と非目標
+prompts/                        後続phaseの作業単位
+reference/pqc-rpki-lab/         読み取り専用の任意submodule
+```
+
+## RPKI lab reference
+
+`reference/pqc-rpki-lab` は参考実装を固定commitで参照するGit submoduleです。
+Phase 1 codeはこのsubmoduleをimportせず、package、build、test discoveryにも含めません。
+
+新規clone時に参照も取得する場合は、次のコマンドを実行します。
+
+```sh
+git clone --recurse-submodules REPOSITORY_URL
+```
+
+既存cloneで後から取得する場合は、次のコマンドを実行します。
+
+```sh
+git submodule update --init
+make check-reference
+```
+
+submoduleを取得していない場合、`make check-reference` はskipします。
+取得済みの場合は、指定commitのdetached HEADかつcleanな状態でなければ失敗します。
+
+## Boundaries
+
+- 秘密鍵、外部checkout、build tree、raw operational input、scratch noteはignored `local/` 以下に置きます。
+- 通常targetはネットワークアクセスを行いません。
+- CCRは必須要素またはprotocol dependencyではありません。
+- Phase 1のcost modelは合成された個数とcoverageであり、byte-size、RRDP、repository、HSM、timingの実測値ではありません。
+- 本リポジトリの結果からproduction互換性や標準準拠を主張しません。

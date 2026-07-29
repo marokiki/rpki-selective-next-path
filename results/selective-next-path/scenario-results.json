@@ -1,0 +1,587 @@
+{
+  "accepted_action_count": 13,
+  "all_assertions_passed": true,
+  "assertions": {
+    "current_signed_key_rejected": true,
+    "hosted_a_activated": true,
+    "hosted_a_no_fallback": true,
+    "new_ta_after_compromise_rejected": true,
+    "next_ta_preaccepted": true,
+    "prebuilt_delegated_activated": true,
+    "sibling_remains_current": true,
+    "unprepared_delegated_rejected": true
+  },
+  "event_log": [
+    {
+      "accepted": true,
+      "global_step": 1,
+      "previous_state": "absent",
+      "reason_code": "NEXT_TA_OBSERVED",
+      "requested_action": "observe_next_ta",
+      "resulting_state": "observed",
+      "schema_version": 1,
+      "scope_id": "global",
+      "simulation_time": "2035-01-01T00:00:00Z",
+      "transition_sequence": null
+    },
+    {
+      "accepted": true,
+      "global_step": 2,
+      "previous_state": "observed",
+      "reason_code": "NEXT_TA_ACCEPTED",
+      "requested_action": "accept_next_ta",
+      "resulting_state": "accepted",
+      "schema_version": 1,
+      "scope_id": "global",
+      "simulation_time": "2035-01-01T00:00:00Z",
+      "transition_sequence": null
+    },
+    {
+      "accepted": true,
+      "global_step": 3,
+      "previous_state": "current_only",
+      "reason_code": "NEXT_CA_PREBUILT",
+      "requested_action": "prebuild_next_ca",
+      "resulting_state": "next_ca_staged",
+      "schema_version": 1,
+      "scope_id": "next-ta-2035",
+      "simulation_time": "2035-01-01T00:00:00Z",
+      "transition_sequence": 1
+    },
+    {
+      "accepted": true,
+      "global_step": 4,
+      "previous_state": "current_only",
+      "reason_code": "NEXT_CA_PREBUILT",
+      "requested_action": "prebuild_next_ca",
+      "resulting_state": "next_ca_staged",
+      "schema_version": 1,
+      "scope_id": "rir-1",
+      "simulation_time": "2035-01-01T00:00:00Z",
+      "transition_sequence": 1
+    },
+    {
+      "accepted": true,
+      "global_step": 5,
+      "previous_state": "current_only",
+      "reason_code": "NEXT_CA_PREBUILT",
+      "requested_action": "prebuild_next_ca",
+      "resulting_state": "next_ca_staged",
+      "schema_version": 1,
+      "scope_id": "delegated-prebuilt",
+      "simulation_time": "2035-01-01T00:00:00Z",
+      "transition_sequence": 1
+    },
+    {
+      "accepted": true,
+      "global_step": 6,
+      "previous_state": "secure",
+      "reason_code": "CURRENT_SUITE_COMPROMISED",
+      "requested_action": "compromise_current",
+      "resulting_state": "compromised",
+      "schema_version": 1,
+      "scope_id": "global",
+      "simulation_time": "2035-01-01T00:00:00Z",
+      "transition_sequence": null
+    },
+    {
+      "accepted": true,
+      "global_step": 7,
+      "previous_state": "current_only",
+      "reason_code": "NEXT_CA_CREATED",
+      "requested_action": "create_next_ca",
+      "resulting_state": "next_parent_available",
+      "schema_version": 1,
+      "scope_id": "hosted-a",
+      "simulation_time": "2035-01-01T00:00:00Z",
+      "transition_sequence": 1
+    },
+    {
+      "accepted": true,
+      "global_step": 8,
+      "previous_state": "next_parent_available",
+      "reason_code": "NEXT_CA_STAGED",
+      "requested_action": "stage_next_ca",
+      "resulting_state": "next_ca_staged",
+      "schema_version": 1,
+      "scope_id": "hosted-a",
+      "simulation_time": "2035-01-01T00:00:00Z",
+      "transition_sequence": 2
+    },
+    {
+      "accepted": true,
+      "global_step": 9,
+      "previous_state": "next_ca_staged",
+      "reason_code": "DUAL_PUBLICATION_STARTED",
+      "requested_action": "dual_publish",
+      "resulting_state": "dual_published",
+      "schema_version": 1,
+      "scope_id": "hosted-a",
+      "simulation_time": "2035-01-01T00:00:00Z",
+      "transition_sequence": 3
+    },
+    {
+      "accepted": true,
+      "global_step": 10,
+      "previous_state": "dual_published",
+      "reason_code": "SCOPE_ACTIVATED",
+      "requested_action": "activate",
+      "resulting_state": "activated",
+      "schema_version": 1,
+      "scope_id": "hosted-a",
+      "simulation_time": "2035-01-01T00:00:00Z",
+      "transition_sequence": 4
+    },
+    {
+      "accepted": false,
+      "global_step": 11,
+      "previous_state": "activated",
+      "reason_code": "UNAVAILABLE_NEXT_NO_FALLBACK",
+      "requested_action": "fetch_next",
+      "resulting_state": "activated",
+      "schema_version": 1,
+      "scope_id": "hosted-a",
+      "simulation_time": "2035-01-01T00:00:00Z",
+      "transition_sequence": null
+    },
+    {
+      "accepted": false,
+      "global_step": 12,
+      "previous_state": "accepted",
+      "reason_code": "CURRENT_SUITE_NOT_SECURE",
+      "requested_action": "accept_next_ta",
+      "resulting_state": "accepted",
+      "schema_version": 1,
+      "scope_id": "global",
+      "simulation_time": "2035-01-01T00:00:00Z",
+      "transition_sequence": null
+    },
+    {
+      "accepted": false,
+      "global_step": 13,
+      "previous_state": "current_only",
+      "reason_code": "CURRENT_SIGNATURE_INSUFFICIENT_AFTER_COMPROMISE",
+      "requested_action": "create_next_ca",
+      "resulting_state": "current_only",
+      "schema_version": 1,
+      "scope_id": "hosted-sibling",
+      "simulation_time": "2035-01-01T00:00:00Z",
+      "transition_sequence": 1
+    },
+    {
+      "accepted": false,
+      "global_step": 14,
+      "previous_state": "current_only",
+      "reason_code": "UNPREPARED_DELEGATED_CA",
+      "requested_action": "create_next_ca",
+      "resulting_state": "current_only",
+      "schema_version": 1,
+      "scope_id": "delegated-unprepared",
+      "simulation_time": "2035-01-01T00:00:00Z",
+      "transition_sequence": 1
+    },
+    {
+      "accepted": true,
+      "global_step": 15,
+      "previous_state": "next_ca_staged",
+      "reason_code": "DUAL_PUBLICATION_STARTED",
+      "requested_action": "dual_publish",
+      "resulting_state": "dual_published",
+      "schema_version": 1,
+      "scope_id": "delegated-prebuilt",
+      "simulation_time": "2035-01-01T00:00:00Z",
+      "transition_sequence": 2
+    },
+    {
+      "accepted": true,
+      "global_step": 16,
+      "previous_state": "dual_published",
+      "reason_code": "SCOPE_ACTIVATED",
+      "requested_action": "activate",
+      "resulting_state": "activated",
+      "schema_version": 1,
+      "scope_id": "delegated-prebuilt",
+      "simulation_time": "2035-01-01T00:00:00Z",
+      "transition_sequence": 3
+    },
+    {
+      "accepted": true,
+      "global_step": 17,
+      "previous_state": "current_only",
+      "reason_code": "CURRENT_REMAINS_AUTHORITATIVE",
+      "requested_action": "fetch_next",
+      "resulting_state": "current_only",
+      "schema_version": 1,
+      "scope_id": "hosted-sibling",
+      "simulation_time": "2035-01-01T00:00:00Z",
+      "transition_sequence": null
+    }
+  ],
+  "final_state": {
+    "accepted_next_ta_id": "next-ta-2035",
+    "current_suite_state": "compromised",
+    "global_step": 17,
+    "next_trust_anchor_state": "accepted",
+    "observed_next_ta_id": "next-ta-2035",
+    "schema_version": 1,
+    "scopes": [
+      {
+        "accepted_next_ta_id": "next-ta-2035",
+        "activated": true,
+        "highest_transition_sequence": 3,
+        "last_aspa_digest": "bb723ff555798e6754bc069d5921afd6f11a6957d9c2bceb06a64c59e30d5dab",
+        "last_child_delegation_digest": "3705cd54f327725758f85a34d7b142046860a714ec4b7b2c1dde2540c03266fa",
+        "last_resource_digest": "7e9491db5fc8f61ccb91d523bebcae1c1cdeaa3aa00d71f32fd227f089b4e111",
+        "last_transition_digest": "00ceab6faf890cfb5c795639db3281f3e753a9a33615447b544444eea2705f72",
+        "last_vrp_digest": "f5ca8f89193cd679c96e39deb768f3a158ebadc0922a74826bf04000b923d387",
+        "next_objects_valid": true,
+        "next_semantics": {
+          "aspas": [
+            {
+              "customer_asn": 64500,
+              "provider_asns": [
+                64496,
+                64497
+              ]
+            }
+          ],
+          "child_delegations": [
+            {
+              "child_ca_id": "delegated-child",
+              "resources": {
+                "as_ranges": [
+                  [
+                    64501,
+                    64501
+                  ]
+                ],
+                "ip_prefixes": [
+                  "2001:db8:1:1::/64"
+                ]
+              }
+            }
+          ],
+          "resources": {
+            "as_ranges": [
+              [
+                64500,
+                64502
+              ]
+            ],
+            "ip_prefixes": [
+              "2001:db8:1::/48"
+            ]
+          },
+          "vrps": [
+            {
+              "asn": 64500,
+              "max_length": 48,
+              "prefix": "2001:db8:1::/48"
+            }
+          ]
+        },
+        "retired": false,
+        "scope_id": "delegated-prebuilt",
+        "state": "activated"
+      },
+      {
+        "accepted_next_ta_id": null,
+        "activated": false,
+        "highest_transition_sequence": 0,
+        "last_aspa_digest": null,
+        "last_child_delegation_digest": null,
+        "last_resource_digest": null,
+        "last_transition_digest": null,
+        "last_vrp_digest": null,
+        "next_objects_valid": false,
+        "next_semantics": {
+          "aspas": null,
+          "child_delegations": null,
+          "resources": null,
+          "vrps": null
+        },
+        "retired": false,
+        "scope_id": "delegated-unprepared",
+        "state": "current_only"
+      },
+      {
+        "accepted_next_ta_id": "next-ta-2035",
+        "activated": true,
+        "highest_transition_sequence": 4,
+        "last_aspa_digest": null,
+        "last_child_delegation_digest": null,
+        "last_resource_digest": "ffb4269e543a04dd6274c2dc00755b492618f1b321515a2f3c8b71bcb0bb791c",
+        "last_transition_digest": "9d82d5ee3b15299db074c57b9610dadca7e206e0c9f615c2bc79d4dee3e0d92d",
+        "last_vrp_digest": "d64fd89bc0007bb4689c47736629a8617783dbb8f969c0d0829a4d6c214c9e07",
+        "next_objects_valid": true,
+        "next_semantics": {
+          "aspas": null,
+          "child_delegations": null,
+          "resources": {
+            "as_ranges": [
+              [
+                64496,
+                64496
+              ]
+            ],
+            "ip_prefixes": [
+              "192.0.2.0/25"
+            ]
+          },
+          "vrps": [
+            {
+              "asn": 64496,
+              "max_length": 25,
+              "prefix": "192.0.2.0/25"
+            }
+          ]
+        },
+        "retired": false,
+        "scope_id": "hosted-a",
+        "state": "activated"
+      },
+      {
+        "accepted_next_ta_id": null,
+        "activated": false,
+        "highest_transition_sequence": 0,
+        "last_aspa_digest": null,
+        "last_child_delegation_digest": null,
+        "last_resource_digest": null,
+        "last_transition_digest": null,
+        "last_vrp_digest": null,
+        "next_objects_valid": false,
+        "next_semantics": {
+          "aspas": null,
+          "child_delegations": null,
+          "resources": null,
+          "vrps": null
+        },
+        "retired": false,
+        "scope_id": "hosted-sibling",
+        "state": "current_only"
+      },
+      {
+        "accepted_next_ta_id": "next-ta-2035",
+        "activated": false,
+        "highest_transition_sequence": 1,
+        "last_aspa_digest": null,
+        "last_child_delegation_digest": null,
+        "last_resource_digest": "584a3c28fbc53b46c67f960ab9525fe6299997859ef98a5c766ccb56da20003c",
+        "last_transition_digest": "93562507bf56b95ee8a3cfe9d4d23d8651012bc9063e2bc81739d3b89f81ab24",
+        "last_vrp_digest": null,
+        "next_objects_valid": true,
+        "next_semantics": {
+          "aspas": null,
+          "child_delegations": null,
+          "resources": {
+            "as_ranges": [
+              [
+                0,
+                4294967295
+              ]
+            ],
+            "ip_prefixes": [
+              "0.0.0.0/0",
+              "::/0"
+            ]
+          },
+          "vrps": null
+        },
+        "retired": false,
+        "scope_id": "next-ta-2035",
+        "state": "next_ca_staged"
+      },
+      {
+        "accepted_next_ta_id": "next-ta-2035",
+        "activated": false,
+        "highest_transition_sequence": 1,
+        "last_aspa_digest": null,
+        "last_child_delegation_digest": null,
+        "last_resource_digest": "dbe413d45ac4bacf6408661f957d4b8a4c3666e11d74d0519870f2c75b3a3d52",
+        "last_transition_digest": "93e8cdf21eee09c897db7cfdcd80cda7c6d1e44cbff68c2ccf820663c6cc928f",
+        "last_vrp_digest": null,
+        "next_objects_valid": true,
+        "next_semantics": {
+          "aspas": null,
+          "child_delegations": null,
+          "resources": {
+            "as_ranges": [
+              [
+                64496,
+                64511
+              ]
+            ],
+            "ip_prefixes": [
+              "192.0.2.0/24",
+              "2001:db8::/32"
+            ]
+          },
+          "vrps": null
+        },
+        "retired": false,
+        "scope_id": "rir-1",
+        "state": "next_ca_staged"
+      }
+    ],
+    "simulation_epoch": "2035-01-01T00:00:00Z",
+    "warning": "EXPERIMENTAL / NOT FOR PRODUCTION"
+  },
+  "input_events": [
+    {
+      "action": "observe_next_ta",
+      "ta_id": "next-ta-2035"
+    },
+    {
+      "action": "accept_next_ta",
+      "ta_id": "next-ta-2035"
+    },
+    {
+      "action": "prebuild_next_ca",
+      "ca_id": "next-ta-2035",
+      "sequence": 1
+    },
+    {
+      "action": "prebuild_next_ca",
+      "ca_id": "rir-1",
+      "sequence": 1
+    },
+    {
+      "action": "prebuild_next_ca",
+      "ca_id": "delegated-prebuilt",
+      "sequence": 1
+    },
+    {
+      "action": "compromise_current"
+    },
+    {
+      "action": "create_next_ca",
+      "ca_id": "hosted-a",
+      "sequence": 1
+    },
+    {
+      "action": "stage_next_ca",
+      "ca_id": "hosted-a",
+      "semantics_from_current": true,
+      "sequence": 2
+    },
+    {
+      "action": "dual_publish",
+      "ca_id": "hosted-a",
+      "sequence": 3
+    },
+    {
+      "action": "activate",
+      "ca_id": "hosted-a",
+      "sequence": 4
+    },
+    {
+      "action": "fetch_next",
+      "available": false,
+      "ca_id": "hosted-a"
+    },
+    {
+      "action": "accept_next_ta",
+      "ta_id": "next-ta-attacker"
+    },
+    {
+      "action": "create_next_ca",
+      "ca_id": "hosted-sibling",
+      "current_signature_only": true,
+      "sequence": 1
+    },
+    {
+      "action": "create_next_ca",
+      "ca_id": "delegated-unprepared",
+      "sequence": 1
+    },
+    {
+      "action": "dual_publish",
+      "ca_id": "delegated-prebuilt",
+      "sequence": 2
+    },
+    {
+      "action": "activate",
+      "ca_id": "delegated-prebuilt",
+      "sequence": 3
+    },
+    {
+      "action": "fetch_next",
+      "available": false,
+      "ca_id": "hosted-sibling"
+    }
+  ],
+  "reason_code_counts": {
+    "CURRENT_REMAINS_AUTHORITATIVE": 1,
+    "CURRENT_SIGNATURE_INSUFFICIENT_AFTER_COMPROMISE": 1,
+    "CURRENT_SUITE_COMPROMISED": 1,
+    "CURRENT_SUITE_NOT_SECURE": 1,
+    "DUAL_PUBLICATION_STARTED": 2,
+    "NEXT_CA_CREATED": 1,
+    "NEXT_CA_PREBUILT": 3,
+    "NEXT_CA_STAGED": 1,
+    "NEXT_TA_ACCEPTED": 1,
+    "NEXT_TA_OBSERVED": 1,
+    "SCOPE_ACTIVATED": 2,
+    "UNAVAILABLE_NEXT_NO_FALLBACK": 1,
+    "UNPREPARED_DELEGATED_CA": 1
+  },
+  "rejected_action_count": 4,
+  "scenario_id": "selective-next-path-phase-1",
+  "schema_version": 1,
+  "semantic_comparisons": {
+    "delegated-prebuilt": {
+      "aspas": {
+        "current_present": true,
+        "enabled": true,
+        "equivalent": true,
+        "next_present": true
+      },
+      "child_delegations": {
+        "current_present": true,
+        "enabled": true,
+        "equivalent": true,
+        "next_present": true
+      },
+      "resources": {
+        "current_present": true,
+        "enabled": true,
+        "equivalent": true,
+        "next_present": true
+      },
+      "vrps": {
+        "current_present": true,
+        "enabled": true,
+        "equivalent": true,
+        "next_present": true
+      }
+    },
+    "hosted-a": {
+      "aspas": {
+        "current_present": false,
+        "enabled": false,
+        "equivalent": true,
+        "next_present": false
+      },
+      "child_delegations": {
+        "current_present": false,
+        "enabled": false,
+        "equivalent": true,
+        "next_present": false
+      },
+      "resources": {
+        "current_present": true,
+        "enabled": true,
+        "equivalent": true,
+        "next_present": true
+      },
+      "vrps": {
+        "current_present": true,
+        "enabled": true,
+        "equivalent": true,
+        "next_present": true
+      }
+    }
+  },
+  "simulation_epoch": "2035-01-01T00:00:00Z",
+  "warning": "EXPERIMENTAL / NOT FOR PRODUCTION"
+}

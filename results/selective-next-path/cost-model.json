@@ -1,0 +1,72 @@
+{
+  "classification": "synthetic Phase 1 count and coverage model; not operational measurement",
+  "concurrently_migrating_ca_count": 2,
+  "logical_ca_count": 6,
+  "prebuilt_ca_count": 3,
+  "schema_version": 1,
+  "strategies": [
+    {
+      "B": 6,
+      "M": 2,
+      "N": 6,
+      "crl_count": 6,
+      "current_signed_product_count": 4,
+      "manifest_count": 6,
+      "next_signed_product_count": 2,
+      "on_demand_ca_count": 0,
+      "post_compromise_migration_coverage": {
+        "ca_count": 6,
+        "ca_count_fraction": 1.0,
+        "resource_weight": 2000,
+        "resource_weight_fraction": 1.0
+      },
+      "prebuilt_ca_certificate_count": 6,
+      "prebuilt_key_count": 6,
+      "strategy": "all_cas_prebuilt"
+    },
+    {
+      "B": 3,
+      "M": 2,
+      "N": 6,
+      "crl_count": 3,
+      "current_signed_product_count": 4,
+      "manifest_count": 3,
+      "next_signed_product_count": 2,
+      "on_demand_ca_count": 2,
+      "post_compromise_migration_coverage": {
+        "ca_count": 5,
+        "ca_count_fraction": 0.833333,
+        "resource_weight": 1980,
+        "resource_weight_fraction": 0.99
+      },
+      "prebuilt_ca_certificate_count": 3,
+      "prebuilt_key_count": 3,
+      "strategy": "selective_upper_path"
+    },
+    {
+      "B": 0,
+      "M": 2,
+      "N": 6,
+      "crl_count": 0,
+      "current_signed_product_count": 6,
+      "manifest_count": 0,
+      "next_signed_product_count": 0,
+      "on_demand_ca_count": 0,
+      "post_compromise_migration_coverage": {
+        "ca_count": 0,
+        "ca_count_fraction": 0.0,
+        "resource_weight": 0,
+        "resource_weight_fraction": 0.0
+      },
+      "prebuilt_ca_certificate_count": 0,
+      "prebuilt_key_count": 0,
+      "strategy": "mixed_tree_only"
+    }
+  ],
+  "unsupported": [
+    "byte-size estimates",
+    "RRDP snapshot and delta estimates",
+    "timing measurements"
+  ],
+  "warning": "EXPERIMENTAL / NOT FOR PRODUCTION"
+}
