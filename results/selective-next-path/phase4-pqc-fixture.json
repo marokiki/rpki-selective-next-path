@@ -1,0 +1,112 @@
+{
+  "all_available_checks_passed": true,
+  "checks": {
+    "policy_compromise_not_rsa_break": true,
+    "pure_mldsa_ca_and_crl_generated": true,
+    "pure_mldsa_complete_object_sizes_available": true,
+    "pure_mldsa_local_validation_confirmed": true
+  },
+  "current_suite": "RSA-2048/SHA-256",
+  "limitations": [
+    "The fresh probe measures aggregate CA/EE/CRL/CMS-attempt runtime, not isolated Hosted CA latency.",
+    "Complete ML-DSA ROA and Manifest sizes and validation reuse pinned public evidence.",
+    "Unmodified Routinator, rpki-client, and FORT rejected the ML-DSA repository; no RP acceptance is claimed.",
+    "The requested Composite suite remains unsupported without the pinned provider and RPKI profile path."
+  ],
+  "next_suites": [
+    {
+      "cryptographic_implementation_reuse": "OpenSSL 3.6.2 and pinned object-generation helper",
+      "generation_probe": {
+        "classification": "fresh local OpenSSL probe using pinned helper; aggregate wall-clock time",
+        "duration_ns": 73973417,
+        "objects": [
+          {
+            "algorithm": "ML-DSA-65",
+            "backend": "OpenSSL CLI",
+            "bytes": 5767,
+            "classification": "rfc-profiled-x509-generated",
+            "object_type": "CA certificate",
+            "private_key_persisted": false,
+            "profile": "RFC 6487 + RFC 9881",
+            "reason": "",
+            "status": "confirmed"
+          },
+          {
+            "algorithm": "ML-DSA-65",
+            "backend": "OpenSSL CLI",
+            "bytes": 3430,
+            "classification": "rfc-profiled-crl-generated",
+            "object_type": "CRL",
+            "private_key_persisted": false,
+            "profile": "RFC 6487 + RFC 9881",
+            "reason": "",
+            "status": "confirmed"
+          }
+        ],
+        "status": "confirmed"
+      },
+      "local_object_validation": {
+        "CMS verify:manifest.mft": "confirmed",
+        "CMS verify:route.roa": "confirmed",
+        "DER parse:ca.cer": "confirmed",
+        "DER parse:ca.crl": "confirmed",
+        "DER parse:manifest.ee.cer": "confirmed",
+        "DER parse:manifest.mft.econtent": "confirmed",
+        "DER parse:route.ee.cer": "confirmed",
+        "DER parse:route.roa.econtent": "confirmed",
+        "EE profile:manifest.ee.cer": "confirmed",
+        "EE profile:route.ee.cer": "confirmed",
+        "Manifest hash:manifest.mft.econtent": "confirmed"
+      },
+      "rp_interoperability_evidence": [
+        {
+          "classification": "reused pinned isolated-container evidence",
+          "parser": "rejected",
+          "status": "rejected",
+          "validator": "Routinator",
+          "vrp_output": "absent"
+        },
+        {
+          "classification": "reused pinned isolated-container evidence",
+          "parser": "rejected",
+          "status": "rejected",
+          "validator": "rpki-client",
+          "vrp_output": "absent"
+        },
+        {
+          "classification": "reused pinned isolated-container evidence",
+          "parser": "rejected",
+          "status": "rejected",
+          "validator": "FORT",
+          "vrp_output": "absent"
+        }
+      ],
+      "rpki_object_generation_evidence": {
+        "artifact_sizes_bytes": {
+          "CA certificate": 5793,
+          "CRL": 3464,
+          "Manifest CMS": 9556,
+          "ROA CMS": 9434
+        },
+        "source": "pinned public fixtures"
+      },
+      "status": "confirmed",
+      "suite": "ML-DSA-65"
+    },
+    {
+      "negative_probe": "OpenSSL signature-algorithm listing contains ML-DSA and ECDSA separately but no selected Composite algorithm.",
+      "reason": "The pinned reference commit contains no Composite provider integration or RPKI X.509/CMS fixture for this suite.",
+      "status": "unsupported",
+      "suite": "id-MLDSA65-ECDSA-P256-SHA512"
+    }
+  ],
+  "phase": 4,
+  "reference_commit": "0d572a851c29411bda4460e5c76394e6f4ec23c9",
+  "schema_version": 1,
+  "status": "partial",
+  "synthetic_transition_policy_evidence": {
+    "current_compromise_is_policy_state": true,
+    "current_signature_not_used_to_introduce_next": true
+  },
+  "warning": "EXPERIMENTAL / NOT FOR PRODUCTION"
+}

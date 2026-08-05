@@ -1,0 +1,301 @@
+{
+  "all_synthetic_checks_passed": true,
+  "calibration": {
+    "artifact_sizes_bytes": {
+      "ca": 595,
+      "crl": 177,
+      "manifest": 960,
+      "roa": 888
+    },
+    "per_ca_generation_ns": 52831291,
+    "per_scope_validation_ns": 14978624,
+    "phase4_mldsa_status": "confirmed",
+    "suite": "P-256/SHA-256"
+  },
+  "checks": {
+    "all_batch_sizes_present": true,
+    "all_strategies_present": true,
+    "no_current_fallback_after_activation": true,
+    "publication_bytes_monotonic": true,
+    "selective_prebuild_smaller_than_full": true
+  },
+  "inputs": {
+    "phase3_measurement": "results/selective-next-path/phase3-real-fixture.json",
+    "phase4_evidence": "results/selective-next-path/phase4-pqc-fixture.json",
+    "scale_fixture": "testdata/selective-next-path/phase7-scale.json"
+  },
+  "krill_backed_batches": [
+    {
+      "N": 10,
+      "reason": "Krill executable unavailable",
+      "status": "skipped"
+    },
+    {
+      "N": 100,
+      "reason": "Krill executable unavailable",
+      "status": "skipped"
+    },
+    {
+      "N": 1000,
+      "reason": "Krill executable unavailable",
+      "status": "skipped"
+    },
+    {
+      "N": 10000,
+      "reason": "Krill executable unavailable",
+      "status": "skipped"
+    }
+  ],
+  "limitations": [
+    "Scale values are linear projections from one Phase 3 P-256 run; they are not batch cryptographic measurements.",
+    "ML-DSA evidence is recorded in Phase 4 but is not used for timing projection because comparable validation timing is unavailable.",
+    "Krill-backed batches were skipped because no isolated Krill executable/repository is configured.",
+    "RRDP, rsync, caching, concurrency, HSM behavior, and validator memory are not modeled."
+  ],
+  "phase": 7,
+  "schema_version": 1,
+  "status": "synthetic-confirmed-krill-skipped",
+  "synthetic_scale_results": [
+    {
+      "B": 10,
+      "M": 1,
+      "N": 10,
+      "ca_coverage_fraction": 1.0,
+      "classification": "synthetic linear projection calibrated by Phase 3 single-run measurements",
+      "covered_ca_count": 10,
+      "on_demand_generated": 0,
+      "projected_generation_ns": 528312910,
+      "projected_validation_ns": 149786240,
+      "publication_bytes": 18208,
+      "publication_object_count": 31,
+      "recovery": {
+        "activated_scope_next_outage_unavailable": 10,
+        "current_fallback_count": 0,
+        "uncovered_scopes_remain_current": 0
+      },
+      "resource_coverage_fraction": 1.0,
+      "strategy": "all_cas_prebuilt"
+    },
+    {
+      "B": 1,
+      "M": 1,
+      "N": 10,
+      "ca_coverage_fraction": 0.9,
+      "classification": "synthetic linear projection calibrated by Phase 3 single-run measurements",
+      "covered_ca_count": 9,
+      "on_demand_generated": 1,
+      "projected_generation_ns": 105662582,
+      "projected_validation_ns": 134807616,
+      "publication_bytes": 4352,
+      "publication_object_count": 7,
+      "recovery": {
+        "activated_scope_next_outage_unavailable": 9,
+        "current_fallback_count": 0,
+        "uncovered_scopes_remain_current": 1
+      },
+      "resource_coverage_fraction": 0.99,
+      "strategy": "selective_upper_path"
+    },
+    {
+      "B": 0,
+      "M": 1,
+      "N": 10,
+      "ca_coverage_fraction": 0.0,
+      "classification": "synthetic linear projection calibrated by Phase 3 single-run measurements",
+      "covered_ca_count": 0,
+      "on_demand_generated": 0,
+      "projected_generation_ns": 0,
+      "projected_validation_ns": 0,
+      "publication_bytes": 0,
+      "publication_object_count": 0,
+      "recovery": {
+        "activated_scope_next_outage_unavailable": 0,
+        "current_fallback_count": 0,
+        "uncovered_scopes_remain_current": 10
+      },
+      "resource_coverage_fraction": 0.0,
+      "strategy": "mixed_tree_only"
+    },
+    {
+      "B": 100,
+      "M": 10,
+      "N": 100,
+      "ca_coverage_fraction": 1.0,
+      "classification": "synthetic linear projection calibrated by Phase 3 single-run measurements",
+      "covered_ca_count": 100,
+      "on_demand_generated": 0,
+      "projected_generation_ns": 5283129100,
+      "projected_validation_ns": 1497862400,
+      "publication_bytes": 182080,
+      "publication_object_count": 310,
+      "recovery": {
+        "activated_scope_next_outage_unavailable": 100,
+        "current_fallback_count": 0,
+        "uncovered_scopes_remain_current": 0
+      },
+      "resource_coverage_fraction": 1.0,
+      "strategy": "all_cas_prebuilt"
+    },
+    {
+      "B": 10,
+      "M": 10,
+      "N": 100,
+      "ca_coverage_fraction": 0.82,
+      "classification": "synthetic linear projection calibrated by Phase 3 single-run measurements",
+      "covered_ca_count": 82,
+      "on_demand_generated": 10,
+      "projected_generation_ns": 1056625820,
+      "projected_validation_ns": 1228247168,
+      "publication_bytes": 43520,
+      "publication_object_count": 70,
+      "recovery": {
+        "activated_scope_next_outage_unavailable": 82,
+        "current_fallback_count": 0,
+        "uncovered_scopes_remain_current": 18
+      },
+      "resource_coverage_fraction": 0.99,
+      "strategy": "selective_upper_path"
+    },
+    {
+      "B": 0,
+      "M": 10,
+      "N": 100,
+      "ca_coverage_fraction": 0.0,
+      "classification": "synthetic linear projection calibrated by Phase 3 single-run measurements",
+      "covered_ca_count": 0,
+      "on_demand_generated": 0,
+      "projected_generation_ns": 0,
+      "projected_validation_ns": 0,
+      "publication_bytes": 0,
+      "publication_object_count": 0,
+      "recovery": {
+        "activated_scope_next_outage_unavailable": 0,
+        "current_fallback_count": 0,
+        "uncovered_scopes_remain_current": 100
+      },
+      "resource_coverage_fraction": 0.0,
+      "strategy": "mixed_tree_only"
+    },
+    {
+      "B": 1000,
+      "M": 100,
+      "N": 1000,
+      "ca_coverage_fraction": 1.0,
+      "classification": "synthetic linear projection calibrated by Phase 3 single-run measurements",
+      "covered_ca_count": 1000,
+      "on_demand_generated": 0,
+      "projected_generation_ns": 52831291000,
+      "projected_validation_ns": 14978624000,
+      "publication_bytes": 1820800,
+      "publication_object_count": 3100,
+      "recovery": {
+        "activated_scope_next_outage_unavailable": 1000,
+        "current_fallback_count": 0,
+        "uncovered_scopes_remain_current": 0
+      },
+      "resource_coverage_fraction": 1.0,
+      "strategy": "all_cas_prebuilt"
+    },
+    {
+      "B": 100,
+      "M": 100,
+      "N": 1000,
+      "ca_coverage_fraction": 0.82,
+      "classification": "synthetic linear projection calibrated by Phase 3 single-run measurements",
+      "covered_ca_count": 820,
+      "on_demand_generated": 100,
+      "projected_generation_ns": 10566258200,
+      "projected_validation_ns": 12282471680,
+      "publication_bytes": 435200,
+      "publication_object_count": 700,
+      "recovery": {
+        "activated_scope_next_outage_unavailable": 820,
+        "current_fallback_count": 0,
+        "uncovered_scopes_remain_current": 180
+      },
+      "resource_coverage_fraction": 0.99,
+      "strategy": "selective_upper_path"
+    },
+    {
+      "B": 0,
+      "M": 100,
+      "N": 1000,
+      "ca_coverage_fraction": 0.0,
+      "classification": "synthetic linear projection calibrated by Phase 3 single-run measurements",
+      "covered_ca_count": 0,
+      "on_demand_generated": 0,
+      "projected_generation_ns": 0,
+      "projected_validation_ns": 0,
+      "publication_bytes": 0,
+      "publication_object_count": 0,
+      "recovery": {
+        "activated_scope_next_outage_unavailable": 0,
+        "current_fallback_count": 0,
+        "uncovered_scopes_remain_current": 1000
+      },
+      "resource_coverage_fraction": 0.0,
+      "strategy": "mixed_tree_only"
+    },
+    {
+      "B": 10000,
+      "M": 1000,
+      "N": 10000,
+      "ca_coverage_fraction": 1.0,
+      "classification": "synthetic linear projection calibrated by Phase 3 single-run measurements",
+      "covered_ca_count": 10000,
+      "on_demand_generated": 0,
+      "projected_generation_ns": 528312910000,
+      "projected_validation_ns": 149786240000,
+      "publication_bytes": 18208000,
+      "publication_object_count": 31000,
+      "recovery": {
+        "activated_scope_next_outage_unavailable": 10000,
+        "current_fallback_count": 0,
+        "uncovered_scopes_remain_current": 0
+      },
+      "resource_coverage_fraction": 1.0,
+      "strategy": "all_cas_prebuilt"
+    },
+    {
+      "B": 1000,
+      "M": 1000,
+      "N": 10000,
+      "ca_coverage_fraction": 0.82,
+      "classification": "synthetic linear projection calibrated by Phase 3 single-run measurements",
+      "covered_ca_count": 8200,
+      "on_demand_generated": 1000,
+      "projected_generation_ns": 105662582000,
+      "projected_validation_ns": 122824716800,
+      "publication_bytes": 4352000,
+      "publication_object_count": 7000,
+      "recovery": {
+        "activated_scope_next_outage_unavailable": 8200,
+        "current_fallback_count": 0,
+        "uncovered_scopes_remain_current": 1800
+      },
+      "resource_coverage_fraction": 0.99,
+      "strategy": "selective_upper_path"
+    },
+    {
+      "B": 0,
+      "M": 1000,
+      "N": 10000,
+      "ca_coverage_fraction": 0.0,
+      "classification": "synthetic linear projection calibrated by Phase 3 single-run measurements",
+      "covered_ca_count": 0,
+      "on_demand_generated": 0,
+      "projected_generation_ns": 0,
+      "projected_validation_ns": 0,
+      "publication_bytes": 0,
+      "publication_object_count": 0,
+      "recovery": {
+        "activated_scope_next_outage_unavailable": 0,
+        "current_fallback_count": 0,
+        "uncovered_scopes_remain_current": 10000
+      },
+      "resource_coverage_fraction": 0.0,
+      "strategy": "mixed_tree_only"
+    }
+  ],
+  "warning": "EXPERIMENTAL / NOT FOR PRODUCTION"
+}

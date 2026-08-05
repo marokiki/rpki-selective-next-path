@@ -1,0 +1,106 @@
+{
+  "all_controller_checks_passed": true,
+  "backend": {
+    "controller": "standalone dry-run orchestration contract",
+    "krill": {
+      "network_used": false,
+      "reason": "Krill executable unavailable; set PQC_RPKI_KRILL_BIN",
+      "status": "skipped"
+    }
+  },
+  "krill_enforced_checks": [],
+  "limitations": [
+    "Krill is unavailable in this environment, so no Krill state or repository was mutated.",
+    "The workflow is a tested controller contract, not evidence that Krill enforces suite selection or no fallback.",
+    "Phase 3 OpenSSL objects demonstrate the equivalent issuance shape but are not Krill-generated.",
+    "Experimental RP executables are unavailable; no new RP acceptance evidence is produced."
+  ],
+  "phase": 5,
+  "required_krill_operations": [
+    "create Hosted child under pre-existing Next parent",
+    "issue resources",
+    "publish CRL and Manifest",
+    "publish equivalent ROA"
+  ],
+  "schema_version": 1,
+  "simulated_outside_krill": [
+    "Current compromise policy event",
+    "child-absence assertion",
+    "suite selection",
+    "activation",
+    "no-fallback behavior"
+  ],
+  "status": "simulated",
+  "warning": "EXPERIMENTAL / NOT FOR PRODUCTION",
+  "workflow": {
+    "checks": {
+      "child_absent_before_transition": true,
+      "created_after_compromise": true,
+      "issued_by_next_parent_only": true,
+      "no_current_fallback": true,
+      "required_objects_requested": true
+    },
+    "events": [
+      {
+        "accepted": true,
+        "event": "next_parent_ready",
+        "parent": "next-rir-1",
+        "step": 1,
+        "suite": "next"
+      },
+      {
+        "accepted": true,
+        "child": "hosted-a",
+        "event": "assert_hosted_child_absent",
+        "step": 2
+      },
+      {
+        "accepted": true,
+        "classification": "controller policy event",
+        "event": "mark_current_compromised",
+        "step": 3
+      },
+      {
+        "accepted": true,
+        "child": "hosted-a",
+        "event": "create_hosted_child",
+        "issuer": "next-rir-1",
+        "operator": "rir-operator",
+        "step": 4,
+        "suite": "next"
+      },
+      {
+        "accepted": true,
+        "event": "publish",
+        "objects": [
+          "CA certificate",
+          "CRL",
+          "Manifest",
+          "ROA"
+        ],
+        "step": 5
+      },
+      {
+        "accepted": true,
+        "event": "activate",
+        "semantic_vrp_match": true,
+        "step": 6,
+        "valid_next_path": true
+      },
+      {
+        "accepted": true,
+        "current_fallback": false,
+        "event": "next_unavailable",
+        "output": "unavailable",
+        "step": 7
+      }
+    ],
+    "schema_version": 1,
+    "vrp": {
+      "asn": 64496,
+      "max_length": 25,
+      "prefix": "192.0.2.0/25"
+    },
+    "warning": "EXPERIMENTAL / NOT FOR PRODUCTION"
+  }
+}

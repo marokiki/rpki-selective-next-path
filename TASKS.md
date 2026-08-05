@@ -60,3 +60,14 @@
 - Run synthetic and Krill-backed batch sizes.
 - Measure generation time, publication size, RP validation time, and recovery behavior.
 - Compare full prebuild, selective prebuild, and Mixed-Tree-only baselines.
+
+## Current implementation status
+
+- Phase 0: complete.
+- Phase 1: complete and deterministic.
+- Phase 2: complete; RRDP byte values are explicit synthetic assumptions.
+- Phase 3: complete with RSA Current and P-256 Next OpenSSL fixtures.
+- Phase 4: pure ML-DSA-65 evidence complete; selected Composite suite unsupported at the pinned reference commit.
+- Phase 5: controller workflow complete; Krill-backed execution skipped because Krill is unavailable.
+- Phase 6: complete reference RP policy with persisted anti-rollback state.
+- Phase 7: synthetic scale evaluation complete; Krill-backed batches skipped because no isolated Krill environment is configured.

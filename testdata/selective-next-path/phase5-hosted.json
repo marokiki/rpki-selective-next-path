@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "warning": "EXPERIMENTAL / NOT FOR PRODUCTION",
+  "parent_ca_id": "next-rir-1",
+  "child_ca_id": "hosted-a",
+  "operator_id": "rir-operator",
+  "vrp": {
+    "prefix": "192.0.2.0/25",
+    "max_length": 25,
+    "asn": 64496
+  }
+}

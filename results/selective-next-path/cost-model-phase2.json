@@ -1,0 +1,170 @@
+{
+  "classification": "synthetic scaling model with measured public RSA fixture sizes",
+  "formulas": {
+    "coverage": "covered CA count or resource weight divided by total",
+    "first_transition_rrdp_delta_bytes": "publication_bytes + delta_envelope_bytes + changed_object_count * delta_per_object_overhead_bytes",
+    "publication_bytes": "sum(object_count[type] * object_size[type])",
+    "rrdp_snapshot_bytes": "publication_bytes + snapshot_envelope_bytes + publication_object_count * snapshot_per_object_overhead_bytes"
+  },
+  "limitations": [
+    "RRDP envelope values are synthetic assumptions, not packet measurements.",
+    "The first-transition delta assumes every modeled Next object is newly published.",
+    "Refresh traffic, deduplication, compression, rsync, and timing are excluded.",
+    "RSA fixture sizes are point samples and do not define all repository objects."
+  ],
+  "parameters": {
+    "B": 3,
+    "M": 2,
+    "N": 6,
+    "object_sizes_bytes": {
+      "ca_certificate": 1064,
+      "crl": 415,
+      "manifest": 1743,
+      "signed_product": 1621
+    },
+    "objects_per_ca": {
+      "ca_certificate": 1,
+      "crl": 1,
+      "manifest": 1,
+      "signed_products": 1
+    },
+    "refresh_interval_seconds": 86400,
+    "rrdp": {
+      "delta_envelope_bytes": 384,
+      "delta_per_object_overhead_bytes": 128,
+      "snapshot_envelope_bytes": 512,
+      "snapshot_per_object_overhead_bytes": 96
+    }
+  },
+  "phase": 2,
+  "schema_version": 1,
+  "simulation_epoch": "2035-01-01T00:00:00Z",
+  "source": {
+    "algorithm": "RSA-2048/SHA-256",
+    "classification": "measured public fixture sizes",
+    "commit": "0d572a851c29411bda4460e5c76394e6f4ec23c9",
+    "notes": "Manifest and signed-product sizes use the Manifest CMS and ROA CMS rows. RRDP envelope values are explicit synthetic assumptions.",
+    "path": "results/rpki-objects/rpki-objects.json",
+    "repository": "https://github.com/marokiki/pqc-rpki-lab.git"
+  },
+  "strategies": [
+    {
+      "B": 6,
+      "M": 2,
+      "N": 6,
+      "crl_count": 6,
+      "current_signed_product_count": 4,
+      "estimated_storage_and_transfer": {
+        "bytes_by_type": {
+          "ca_certificates": 6384,
+          "crls": 2490,
+          "manifests": 10458,
+          "signed_products": 3242
+        },
+        "first_transition_rrdp_delta_bytes": 25518,
+        "object_counts": {
+          "ca_certificates": 6,
+          "crls": 6,
+          "manifests": 6,
+          "signed_products": 2
+        },
+        "publication_bytes": 22574,
+        "publication_object_count": 20,
+        "refresh_interval_seconds": 86400,
+        "rrdp_snapshot_bytes": 25006
+      },
+      "manifest_count": 6,
+      "next_signed_product_count": 2,
+      "on_demand_ca_count": 0,
+      "on_demand_generated_ca_count": 0,
+      "post_compromise_migration_coverage": {
+        "ca_count": 6,
+        "ca_count_fraction": 1.0,
+        "resource_weight": 2000,
+        "resource_weight_fraction": 1.0
+      },
+      "prebuilt_ca_certificate_count": 6,
+      "prebuilt_key_count": 6,
+      "strategy": "all_cas_prebuilt"
+    },
+    {
+      "B": 3,
+      "M": 2,
+      "N": 6,
+      "crl_count": 3,
+      "current_signed_product_count": 4,
+      "estimated_storage_and_transfer": {
+        "bytes_by_type": {
+          "ca_certificates": 4256,
+          "crls": 1660,
+          "manifests": 6972,
+          "signed_products": 3242
+        },
+        "first_transition_rrdp_delta_bytes": 18306,
+        "object_counts": {
+          "ca_certificates": 4,
+          "crls": 4,
+          "manifests": 4,
+          "signed_products": 2
+        },
+        "publication_bytes": 16130,
+        "publication_object_count": 14,
+        "refresh_interval_seconds": 86400,
+        "rrdp_snapshot_bytes": 17986
+      },
+      "manifest_count": 3,
+      "next_signed_product_count": 2,
+      "on_demand_ca_count": 2,
+      "on_demand_generated_ca_count": 1,
+      "post_compromise_migration_coverage": {
+        "ca_count": 5,
+        "ca_count_fraction": 0.833333,
+        "resource_weight": 1980,
+        "resource_weight_fraction": 0.99
+      },
+      "prebuilt_ca_certificate_count": 3,
+      "prebuilt_key_count": 3,
+      "strategy": "selective_upper_path"
+    },
+    {
+      "B": 0,
+      "M": 2,
+      "N": 6,
+      "crl_count": 0,
+      "current_signed_product_count": 6,
+      "estimated_storage_and_transfer": {
+        "bytes_by_type": {
+          "ca_certificates": 0,
+          "crls": 0,
+          "manifests": 0,
+          "signed_products": 0
+        },
+        "first_transition_rrdp_delta_bytes": 384,
+        "object_counts": {
+          "ca_certificates": 0,
+          "crls": 0,
+          "manifests": 0,
+          "signed_products": 0
+        },
+        "publication_bytes": 0,
+        "publication_object_count": 0,
+        "refresh_interval_seconds": 86400,
+        "rrdp_snapshot_bytes": 512
+      },
+      "manifest_count": 0,
+      "next_signed_product_count": 0,
+      "on_demand_ca_count": 0,
+      "on_demand_generated_ca_count": 0,
+      "post_compromise_migration_coverage": {
+        "ca_count": 0,
+        "ca_count_fraction": 0.0,
+        "resource_weight": 0,
+        "resource_weight_fraction": 0.0
+      },
+      "prebuilt_ca_certificate_count": 0,
+      "prebuilt_key_count": 0,
+      "strategy": "mixed_tree_only"
+    }
+  ],
+  "warning": "EXPERIMENTAL / NOT FOR PRODUCTION"
+}

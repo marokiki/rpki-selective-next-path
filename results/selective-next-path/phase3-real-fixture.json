@@ -1,0 +1,137 @@
+{
+  "all_checks_passed": true,
+  "checks": {
+    "all_cms_and_manifest_checks_pass": true,
+    "current_hosted_created_before_compromise": true,
+    "equivalent_vrp_payload": true,
+    "next_hosted_created_after_compromise": true,
+    "next_hosted_rejected_by_current_ta": true,
+    "next_hosted_validates_to_next_ta": true,
+    "next_ta_and_rir_prebuilt": true,
+    "no_current_signed_next_introduction": true
+  },
+  "classification": "local OpenSSL real-object experiment with pinned ASN.1 helper",
+  "cross_suite_validation": {
+    "duration_ns": 8970292,
+    "wrong_trust_anchor_rejected": true
+  },
+  "environment": {
+    "openssl": "OpenSSL 3.6.2 7 Apr 2026 (Library: OpenSSL 3.6.2 7 Apr 2026)",
+    "reference_commit": "0d572a851c29411bda4460e5c76394e6f4ec23c9"
+  },
+  "limitations": [
+    "P-256 is a classical stand-in for the Next Suite, not a PQC algorithm.",
+    "Validation uses OpenSSL path/CMS checks and the pinned manifest parser, not an independent production RP.",
+    "Timing values are single-run wall-clock measurements and require repeated sampling before statistical use.",
+    "No RRDP or rsync transport is exercised."
+  ],
+  "optional_rp_validators": {
+    "routinator": "skipped: executable unavailable",
+    "rpki-client": "skipped: executable unavailable"
+  },
+  "phase": 3,
+  "private_keys_persisted": false,
+  "raw_workspace": "local/selective-next-path/phase3 (temporary and deleted after measurement)",
+  "scenario": {
+    "compromise_is_policy_event": true,
+    "vrp": {
+      "asn": 64496,
+      "max_length": 25,
+      "prefix": "192.0.2.0/25"
+    }
+  },
+  "schema_version": 1,
+  "simulation_epoch": "2035-01-01T00:00:00Z",
+  "status": "confirmed",
+  "suites": [
+    {
+      "algorithm": "RSA-2048/SHA-256",
+      "artifacts_bytes": {
+        "crl": 374,
+        "hosted_ca_certificate": 996,
+        "manifest_cms": 1554,
+        "manifest_ee_certificate": 911,
+        "roa_cms": 1483,
+        "roa_ee_certificate": 963
+      },
+      "events": [
+        {
+          "duration_ns": 91120833,
+          "event": "trust_anchor_created",
+          "phase": "pre_compromise"
+        },
+        {
+          "duration_ns": 31320791,
+          "event": "rir_created",
+          "phase": "pre_compromise"
+        },
+        {
+          "duration_ns": 47206666,
+          "event": "hosted_ca_created",
+          "phase": "pre_compromise"
+        }
+      ],
+      "roa_econtent_sha256": "c506081afef01ddddc8f2de34dcd51cefa70ed9355f904871a893d0c6197e4cb",
+      "suite": "current",
+      "timings_ns": {
+        "crl_generation": 12110041,
+        "manifest_cms_validation": 5324792,
+        "manifest_issue_and_sign": 81023833,
+        "path_validation": 5238958,
+        "roa_cms_validation": 5416250,
+        "roa_issue_and_sign": 62731083
+      },
+      "validation": {
+        "certificate_path_valid": true,
+        "manifest_cms_valid": true,
+        "manifest_hashes_valid": true,
+        "roa_cms_valid": true
+      }
+    },
+    {
+      "algorithm": "P-256/SHA-256",
+      "artifacts_bytes": {
+        "crl": 177,
+        "hosted_ca_certificate": 595,
+        "manifest_cms": 960,
+        "manifest_ee_certificate": 510,
+        "roa_cms": 888,
+        "roa_ee_certificate": 560
+      },
+      "events": [
+        {
+          "duration_ns": 11709375,
+          "event": "trust_anchor_created",
+          "phase": "pre_compromise"
+        },
+        {
+          "duration_ns": 18508917,
+          "event": "rir_created",
+          "phase": "pre_compromise"
+        },
+        {
+          "duration_ns": 16844917,
+          "event": "hosted_ca_created",
+          "phase": "post_compromise"
+        }
+      ],
+      "roa_econtent_sha256": "c506081afef01ddddc8f2de34dcd51cefa70ed9355f904871a893d0c6197e4cb",
+      "suite": "next",
+      "timings_ns": {
+        "crl_generation": 10150834,
+        "manifest_cms_validation": 4834958,
+        "manifest_issue_and_sign": 21416124,
+        "path_validation": 5048333,
+        "roa_cms_validation": 5095333,
+        "roa_issue_and_sign": 21264333
+      },
+      "validation": {
+        "certificate_path_valid": true,
+        "manifest_cms_valid": true,
+        "manifest_hashes_valid": true,
+        "roa_cms_valid": true
+      }
+    }
+  ],
+  "warning": "EXPERIMENTAL / NOT FOR PRODUCTION"
+}

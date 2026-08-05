@@ -67,3 +67,14 @@ Generated view only. It must state:
 - security failures;
 - unsupported features;
 - commands required to reproduce the output.
+
+## Phase 2-7 extension artifacts
+
+- `cost-model-phase2.json` and `experiment-manifest-phase2.json`: deterministic size and RRDP-assumption model.
+- `phase3-real-fixture.json`: local RSA/P-256 X.509, CRL, ROA, Manifest, and validation measurements.
+- `phase4-pqc-fixture.json`: ML-DSA-65 generation/validation evidence and Composite support boundary.
+- `phase5-hosted-workflow.json`: Hosted workflow controller contract and Krill enforcement boundary.
+- `phase6-rp-policy.json`: persisted scoped activation, retirement, replay, and no-fallback evidence.
+- `phase7-scale-evaluation.json`: calibrated synthetic scale rows and Krill batch execution status.
+
+Every JSON artifact includes `schema_version` and classification or limitations. Phase 3, 4, and 7 timing values are measurements or projections as explicitly labeled and are not deterministic byte-for-byte outputs.

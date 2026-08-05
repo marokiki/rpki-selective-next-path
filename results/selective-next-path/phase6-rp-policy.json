@@ -1,0 +1,79 @@
+{
+  "all_checks_passed": true,
+  "checks": {
+    "activation_accepted": true,
+    "current_authoritative_before_activation": true,
+    "current_publication_not_authoritative": true,
+    "next_authoritative_after_activation": true,
+    "next_failure_has_no_current_fallback": true,
+    "older_sequence_rejected_after_restart": true,
+    "retirement_monotonic": true,
+    "semantic_stage_accepted": true
+  },
+  "events": [
+    {
+      "event": "select_before",
+      "reason": "CURRENT_AUTHORITATIVE_BEFORE_ACTIVATION",
+      "source": "current"
+    },
+    {
+      "accepted": true,
+      "event": "stage",
+      "reason": "NEXT_OUTPUT_STAGED"
+    },
+    {
+      "accepted": true,
+      "event": "activate",
+      "reason": "SCOPE_ACTIVATED"
+    },
+    {
+      "event": "select_after",
+      "reason": "NEXT_AUTHORITATIVE_AFTER_ACTIVATION",
+      "source": "next"
+    },
+    {
+      "event": "next_outage",
+      "reason": "UNAVAILABLE_NEXT_NO_FALLBACK",
+      "source": "unavailable"
+    },
+    {
+      "accepted": false,
+      "event": "restart_replay",
+      "reason": "SEQUENCE_REPLAY"
+    },
+    {
+      "accepted": true,
+      "event": "retire",
+      "reason": "CURRENT_RETIRED"
+    },
+    {
+      "event": "current_remains_published",
+      "reason": "NEXT_AUTHORITATIVE_AFTER_ACTIVATION",
+      "source": "next"
+    }
+  ],
+  "limitations": [
+    "This is a reference policy layer around RP-like semantic outputs, not a production validator.",
+    "Certificate and repository validation results are inputs to the policy rather than performed by it.",
+    "Persistence uses a single JSON file and does not provide transactional multi-process locking."
+  ],
+  "persisted_state_schema": {
+    "accepted_next_ta_id": "next-ta-2035",
+    "activated": true,
+    "highest_transition_sequence": 3,
+    "last_aspa_digest": "e6277aadbd91ff3d3e8f3d48e3c06f3522e55e54c0cf615bb02c19ab7790abb5",
+    "last_child_delegation_digest": null,
+    "last_resource_digest": "ffb4269e543a04dd6274c2dc00755b492618f1b321515a2f3c8b71bcb0bb791c",
+    "last_transition_digest": "92859912f20e69254689483094a9ea51ee162153a3e91fba9813f3ac38cb887e",
+    "last_vrp_digest": "d64fd89bc0007bb4689c47736629a8617783dbb8f969c0d0829a4d6c214c9e07",
+    "retired": true,
+    "scope_id": "hosted-a",
+    "staged": true
+  },
+  "phase": 6,
+  "schema_version": 1,
+  "scope_id": "hosted-a",
+  "state_storage": "local/selective-next-path/phase6 temporary test state",
+  "status": "confirmed",
+  "warning": "EXPERIMENTAL / NOT FOR PRODUCTION"
+}

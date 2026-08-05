@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "warning": "EXPERIMENTAL / NOT FOR PRODUCTION",
+  "classification": "synthetic scaling model with measured public RSA fixture sizes",
+  "simulation_epoch": "2035-01-01T00:00:00Z",
+  "refresh_interval_seconds": 86400,
+  "objects_per_ca": {
+    "ca_certificate": 1,
+    "crl": 1,
+    "manifest": 1,
+    "signed_products": 1
+  },
+  "object_sizes_bytes": {
+    "ca_certificate": 1064,
+    "crl": 415,
+    "manifest": 1743,
+    "signed_product": 1621
+  },
+  "rrdp": {
+    "snapshot_envelope_bytes": 512,
+    "snapshot_per_object_overhead_bytes": 96,
+    "delta_envelope_bytes": 384,
+    "delta_per_object_overhead_bytes": 128
+  },
+  "source": {
+    "repository": "https://github.com/marokiki/pqc-rpki-lab.git",
+    "commit": "0d572a851c29411bda4460e5c76394e6f4ec23c9",
+    "path": "results/rpki-objects/rpki-objects.json",
+    "algorithm": "RSA-2048/SHA-256",
+    "classification": "measured public fixture sizes",
+    "notes": "Manifest and signed-product sizes use the Manifest CMS and ROA CMS rows. RRDP envelope values are explicit synthetic assumptions."
+  }
+}

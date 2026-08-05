@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "warning": "EXPERIMENTAL / NOT FOR PRODUCTION",
+  "scope_id": "hosted-a",
+  "accepted_next_ta_id": "next-ta-2035",
+  "comparison_scope": {"resources": true, "vrps": true, "aspas": true, "child_delegations": false},
+  "current": {
+    "resources": {"ip_prefixes": ["192.0.2.0/25"], "as_ranges": [[64496, 64496]]},
+    "vrps": [{"prefix": "192.0.2.0/25", "max_length": 25, "asn": 64496}],
+    "aspas": [{"customer_asn": 64496, "provider_asns": [64497, 64498]}]
+  },
+  "next": {
+    "resources": {"ip_prefixes": ["192.0.2.0/25"], "as_ranges": [64496]},
+    "vrps": [{"asn": "AS64496", "maxLength": 25, "prefix": "192.0.2.1/25"}],
+    "aspas": [{"customer_asn": "AS64496", "providers": [64498, 64497]}]
+  }
+}
