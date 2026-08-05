@@ -2,16 +2,15 @@
 
 > EXPERIMENTAL / NOT FOR PRODUCTION
 
-Selective Next-path RPKI移行を検討するための、決定論的でprotocol-neutralなPython状態機械です。
-Current Suiteの危殆化前にNext Trust Anchorと上位経路を準備し、危殆化後に権威的なHosted operatorがHosted CAを生成して移行できるかを合成fixtureで検証します。
+This repository contains a deterministic, protocol-neutral state-machine model for selective post-quantum migration in the Resource Public Key Infrastructure (RPKI).
+It models pre-acceptance of a Next Trust Anchor, prebuilt upper certification paths, on-demand Hosted CA creation, CA-scoped activation, and rollback protection after Current Suite compromise.
 
-実証明書、暗号アルゴリズム、RRDP、rsync、Krill、Routinator、rpki-client、production validatorは実装しません。
+The accompanying research-design document is available through [GitHub Pages](https://marokiki.github.io/rpki-selective-next-path/).
 
 ## Requirements
 
-- Python 3.11以降
-- GNU Makeまたは互換make
-- 通常の生成とテストにはネットワークアクセスもsubmoduleも不要
+- Python 3.11 or later
+- GNU Make or a compatible implementation
 
 ## Run
 
@@ -21,7 +20,7 @@ make selective-next-path-test
 make test
 ```
 
-`make selective-next-path` は次の決定論的な成果物を生成します。
+`make selective-next-path` generates the following deterministic artifacts:
 
 ```text
 results/selective-next-path/
@@ -31,62 +30,60 @@ results/selective-next-path/
 └── report.md
 ```
 
-JSONが一次成果物であり、`report.md`は同じデータから生成する表示用ビューです。
-すべての公開出力に `EXPERIMENTAL / NOT FOR PRODUCTION` を含めます。
+The JSON files are the primary machine-readable artifacts.
+`report.md` is a generated view of the same data.
 
 ## Model
 
-Phase 1は次をモデル化します。
+Phase 1 models:
 
-- Current Suiteの `secure`、`compromised`、`retired`
-- Next TAの `absent`、`observed`、`accepted`
-- TA、RIR/NIR、Hosted、DelegatedのCA role
-- prebuilt Next pathとon-demand Hosted CA
-- staging、dual publication、semantic comparison、activation、retirement
-- scopeごとのmonotonic transition sequenceとanti-rollback
-- activation後のNext障害に対するno-fallback
+- Current Suite states: `secure`, `compromised`, and `retired`
+- Next Trust Anchor states: `absent`, `observed`, and `accepted`
+- Trust Anchor, RIR/NIR, Hosted, and Delegated CA roles
+- Prebuilt Next paths and on-demand Hosted CAs
+- Staging, dual publication, semantic comparison, activation, and retirement
+- Per-scope monotonic transition sequences and rollback protection
+- No fallback to Current after activation
 
-Semantic comparisonは設定されたscopeに従い、正規化したresource set、VRP、ASPA、child delegationを比較します。
-DER、URI、SIA、AIA、validityの完全一致は要求しません。
+Semantic comparison is configured per scope.
+It compares normalized resource sets, VRPs, ASPAs, and child delegations without requiring byte identity for DER, URIs, SIA, AIA, or validity fields.
 
 ## Repository layout
 
 ```text
-src/selective_next_path/        状態機械、意味比較、cost model、result I/O
-tools/                          fixture生成と参照境界検査
-tests/                          T01–T20を含むunit tests
-testdata/selective-next-path/   公開可能な合成入力
-results/selective-next-path/    決定論的な生成結果
-docs/                           研究設計と非目標
-prompts/                        後続phaseの作業単位
-reference/pqc-rpki-lab/         読み取り専用の任意submodule
+src/selective_next_path/        State machine, semantic comparison, cost model, result I/O
+tools/                          Fixture generation and reference-boundary checks
+tests/                          Unit tests, including scenarios T01-T20
+testdata/selective-next-path/   Public synthetic input
+results/selective-next-path/    Deterministic generated results
+docs/                           Research design and GitHub Pages source
+prompts/                        Work units for later phases
+reference/pqc-rpki-lab/         Pinned read-only reference submodule
 ```
 
 ## RPKI lab reference
 
-`reference/pqc-rpki-lab` は参考実装を固定commitで参照するGit submoduleです。
-Phase 1 codeはこのsubmoduleをimportせず、package、build、test discoveryにも含めません。
+`reference/pqc-rpki-lab` is a Git submodule pinned to a specific public commit of the reference implementation.
+Phase 1 does not import code from this submodule, and `reference/` is excluded from package, build, and test discovery.
 
-新規clone時に参照も取得する場合は、次のコマンドを実行します。
+Clone the repository and initialize the reference with:
 
 ```sh
-git clone --recurse-submodules REPOSITORY_URL
+git clone --recurse-submodules https://github.com/marokiki/rpki-selective-next-path.git
 ```
 
-既存cloneで後から取得する場合は、次のコマンドを実行します。
+Initialize it later with:
 
 ```sh
 git submodule update --init
 make check-reference
 ```
 
-submoduleを取得していない場合、`make check-reference` はskipします。
-取得済みの場合は、指定commitのdetached HEADかつcleanな状態でなければ失敗します。
+The reference check requires the pinned detached HEAD and a clean submodule worktree.
 
 ## Boundaries
 
-- 秘密鍵、外部checkout、build tree、raw operational input、scratch noteはignored `local/` 以下に置きます。
-- 通常targetはネットワークアクセスを行いません。
-- CCRは必須要素またはprotocol dependencyではありません。
-- Phase 1のcost modelは合成された個数とcoverageであり、byte-size、RRDP、repository、HSM、timingの実測値ではありません。
-- 本リポジトリの結果からproduction互換性や標準準拠を主張しません。
+- Private keys, external checkouts, build trees, raw operational inputs, and scratch notes belong under ignored `local/` paths.
+- CCR is optional diagnostic material and is not a protocol dependency.
+- The Phase 1 cost model reports synthetic counts and coverage, not measured byte sizes, repository behavior, HSM behavior, or timing.
+- The results do not establish production interoperability or standards conformance.
